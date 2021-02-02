@@ -17,8 +17,14 @@ app.use((req, res, next) => {
 });
 // catch errors
 app.use((error, res, next) => {
-	res.status(error.status || 500);
-	res.json(error);
+    res.status(error.status || 500);
+    res.statusMessage = "Erro Interno no Servidor";
+    error.statusCode = res.statusCode;
+    error.statusMessage = res.statusMessage;
+	res.json({
+        status: error.statusCode,
+        message: error.statusMessage
+    });
 });
 
 app.listen(process.env.PORT || 8080, () => console.log(`\n->  @@ Likearns API is running on ${process.env.APP_URL}\n`));

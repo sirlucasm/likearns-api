@@ -3,21 +3,23 @@ require('dotenv/config');
 module.exports = {
 
 	development: {
-		client: 'mssql',
+		client: 'mysql',
 		connection: {
-			database: 'fire4dev_dev',
-			user: 'postgres',
-			password: 'postgres',
+			database: 'likearns_dev',
+			user: 'root',
+			password: 'root',
+			port: '3305'
 		},
+		pool: { min: 0, max: 7 },
 		migrations: {
 			tableName: 'knex_migrations',
-			directory: `${__dirname}/src/migrations`,
+			directory: `${__dirname}/src/console/migrations`,
 		},
 		useNullAsDefault: true,
 	},
 
 	production: {
-		client: 'mssql',
+		client: 'mysql',
 		connection: process.env.DB_URL,
 		pool: {
 			min: 2,
@@ -25,7 +27,7 @@ module.exports = {
 		},
 		migrations: {
 			tableName: 'knex_migrations',
-			directory: `${__dirname}/src/migrations`,
+			directory: `${__dirname}/src/console/migrations`,
 		},
 		useNullAsDefault: true,
 	},

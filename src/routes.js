@@ -9,7 +9,8 @@ const UserController = require('./controllers/UserController');
 routes
 	// current user
     // .get('/me', authentication, UserController.me)
-    .get('/', UserController.index)
-    .get('/users', UserController.index);
+    .get('/api', (req, res, next) => {
+        res.send("Welcome to Likearns API");
+    });
 
 module.exports = routes;
