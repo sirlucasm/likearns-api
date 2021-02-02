@@ -91,5 +91,35 @@ module.exports = {
 		} catch (error) {
 			return next(error);
 		}
+    },
+    
+    async login(req, res, next) {
+		try {
+            const { params } = req.body;
+            let user;
+            if (Object.keys(params).includes('username'))
+                user = await knex('users').where({ username: params.username });
+            else if (Object.keys(params).includes('email'))
+                user = await knex('users').where({ email: params.email });
+			
+			if (user.length > 0) {
+				const passwordValidate = await bcrypt.compare(
+					params.password,
+					user[0].password,
+				);
+				if (passwordValidate) {
+					const token = jwt.sign({ ...user[0] }, process.env.JWT_PRIVATE_KEY,
+					{
+						expiresIn: '20d',
+					});
+					return res.status(200).json({ token });
+				}
+				return res.status(401).json({ message: 'Email ou senha estão incorretos' });
+			}
+			return res.status(401).json({ message: 'Email ou senha estão incorretos' });
+		} catch (error) {
+			next(error);
+		}
+		return null;
 	},
 };

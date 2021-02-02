@@ -16,6 +16,7 @@ routes
     .post('/users', UserController.create)
     .put('/users', authentication, UserController.update)
     .delete('/users', authentication, UserController.delete)
-    .get('/users/me', authentication, UserController.me); // current user
+    .get('/users/me', authentication, UserController.me) // current user
+    .post('/users/login', UserController.login);
 
 module.exports = routes;
