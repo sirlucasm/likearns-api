@@ -1,0 +1,29 @@
+{
+	"name": "likearns-api",
+	"version": "1.0.0",
+	"description": "API for Likearns website",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon src/server.js",
+		"production": "node src/server.js"
+	},
+	"repository": "https://github.com/sirlucasm/likearns-api",
+	"author": "Lucas Matheus",
+	"license": "MIT",
+	"private": true,
+	"dependencies": {
+		"@types/dotenv": "^8.2.0",
+		"bcrypt": "^5.0.0",
+		"cors": "^2.8.5",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"jsonwebtoken": "^8.5.1",
+		"knex": "^0.21.17",
+		"mssql": "^6.3.1",
+		"nodemailer": "^6.4.17"
+	},
+	"devDependencies": {
+		"eslint": "^7.19.0",
+		"nodemon": "^2.0.7"
+	}
+}

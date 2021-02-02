@@ -1,0 +1,39 @@
+{
+    "env": {
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 12
+    },
+    "rules": {
+        "indent": [
+            "error",
+            "tab"
+        ],
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "class-methods-use-this": "off",
+		"no-param-reassign": "off",
+		"camelcase": "error",
+		"no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
+		"no-tabs": "off",
+		"no-alert": "off",
+		"no-console": "off",
+		"import/order": "off",
+		"consistent-return": "off",
+		"line-breaks": "off",
+		"radix": "off"
+    }
+}
