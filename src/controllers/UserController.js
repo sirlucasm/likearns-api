@@ -33,17 +33,14 @@ module.exports = {
             const encryptedPassword = await bcrypt.hash(params.password, 10); // encrypt password
             params.password = encryptedPassword;
             const newUserId = await knex('users').insert(params); // database insert
-            const mailVerifyToken = jwt.sign({
+            const token = jwt.sign({
                 id: newUserId[0],
                 ...params
 			}, process.env.JWT_PRIVATE_KEY,
 			{
 				expiresIn: '10h',
             });
-            const invertedToken = mailVerifyToken.split('').reverse().join('');
-            mailParams.to = { email: params.email }
-            mailParams.token = invertedToken;
-            return res.status(201).send();
+            return res.status(201).json({ token });
         } catch (error) {
 			next(error);
 		} return null;
