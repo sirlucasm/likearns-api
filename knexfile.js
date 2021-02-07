@@ -7,8 +7,8 @@ module.exports = {
 		connection: {
 			database: 'likearns_dev',
 			user: 'root',
-			password: 'root',
-			port: '3305'
+			password: '',
+			port: '3306'
 		},
 		pool: { min: 0, max: 7 },
 		migrations: {
