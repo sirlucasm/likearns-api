@@ -48,6 +48,7 @@ module.exports = {
     async update(req, res, next) {
 		try {
             const { params } = req.body;
+			params.updated_at = knex.fn.now();
             const { id } = req.token;
             let user;
             if (params.email || params.username){
@@ -118,4 +119,14 @@ module.exports = {
 		}
 		return null;
 	},
+
+	async verifyAccount(req, res, next) {
+		try {
+			const { id } = req;
+			await knex('users').update({ verified_email: true, updated_at: knex.fn.now() }).where({ id });
+			return res.status(200).send();
+		} catch (error) {
+			next(error);
+		}
+	}
 };

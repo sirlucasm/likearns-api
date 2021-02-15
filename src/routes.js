@@ -2,8 +2,10 @@ const express = require('express');
 
 const routes = express.Router();
 const authentication = require('./middleware/Authentication');
+const verifyAccount = require('./middleware/VerifyAccount');
 
 const UserController = require('./controllers/UserController');
+const MailerController = require('./controllers/MailerController');
 
 routes
     .get('/', (req, res, next) => {
@@ -17,6 +19,9 @@ routes
     .put('/users', authentication, UserController.update)
     .delete('/users', authentication, UserController.delete)
     .get('/users/me', authentication, UserController.me) // current user
-    .post('/users/login', UserController.login);
+    .post('/users/login', UserController.login)
+    .post('/users/verify-account', verifyAccount, UserController.verifyAccount)
+    // MAILER
+    .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail);
 
 module.exports = routes;
