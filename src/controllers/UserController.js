@@ -27,7 +27,6 @@ module.exports = {
     async create(req, res, next) {
 		try {
             const { params } = req.body;
-            const mailParams = {};
             const user = await knex('users').where({ username: params.username }).orWhere({ email: params.email });
             if (user.length > 0) return res.status(400).json({ message: 'Esta conta já existe' });
             const encryptedPassword = await bcrypt.hash(params.password, 10); // encrypt password
