@@ -6,6 +6,22 @@ const {
 } = require('../utils');
 // const MailerController = require('./MailerController');
 
+const referralFriend = async (username) => {
+	try {
+		await knex.transaction(async () => {
+			const friend = knex('users').where({ username });
+			await friend.increment({
+				points: 150,
+				invited_friends: 1,
+				invited_total_points: 150
+			})
+		})
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 module.exports = {
 	async index(req, res, next) {
 		try {
@@ -27,6 +43,7 @@ module.exports = {
     async create(req, res, next) {
 		try {
             const { params } = req.body;
+			const referralCode = params.referral_code_applied;
             const user = await knex('users').where({ username: params.username }).orWhere({ email: params.email });
             if (user.length > 0) return res.status(400).json({ message: 'Esta conta já existe' });
             const encryptedPassword = await bcrypt.hash(params.password, 10); // encrypt password
@@ -39,6 +56,7 @@ module.exports = {
 			{
 				expiresIn: '10h',
             });
+			if (referralCode) await referralFriend(referralCode);
             return res.status(201).json({ token });
         } catch (error) {
 			next(error);
