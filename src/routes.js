@@ -26,8 +26,11 @@ routes
     // MAILER
     .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
     // GAIN
+    // GAIN FOLLOWERS
     .get('/gain/followers', authentication, GainFollowerController.index)
+    .post('/gain/followers/publish', authentication, GainFollowerController.create)
+    // GAIN LIKES
     .get('/gain/likes', authentication, GainLikeController.index)
-    ;
+    .post('/gain/likes/publish', authentication, GainLikeController.create);
 
 module.exports = routes;
