@@ -4,7 +4,6 @@ const knex = require('../config/knex');
 const {
     createPagination
 } = require('../utils');
-// const MailerController = require('./MailerController');
 
 const referralFriend = async (username) => {
 	try {

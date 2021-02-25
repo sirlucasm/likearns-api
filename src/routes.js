@@ -6,6 +6,8 @@ const verifyAccount = require('./middleware/VerifyAccount');
 
 const UserController = require('./controllers/UserController');
 const MailerController = require('./controllers/MailerController');
+const GainFollowerController = require('./controllers/GainFollowerController');
+const GainLikeController = require('./controllers/GainLikeController');
 
 routes
     .get('/', (req, res, next) => {
@@ -22,6 +24,10 @@ routes
     .post('/users/login', UserController.login)
     .post('/users/verify-account', verifyAccount, UserController.verifyAccount)
     // MAILER
-    .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail);
+    .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
+    // GAIN
+    .get('/gain/followers', authentication, GainFollowerController.index)
+    .get('/gain/likes', authentication, GainLikeController.index)
+    ;
 
 module.exports = routes;
