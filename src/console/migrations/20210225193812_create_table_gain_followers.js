@@ -7,4 +7,4 @@ exports.up = (knex) => knex.schema.createTable('gain_followers', (t) => {
 	t.timestamps(true, true);
 });
 
-exports.down = (knex) => knex.schema.dropTable('users');
+exports.down = (knex) => knex.schema.dropTable('gain_followers');

@@ -10,4 +10,4 @@ exports.up = (knex) => knex.schema.createTable('users_likes', (t) => {
 	t.timestamps(true, true);
 });
 
-exports.down = (knex) => knex.schema.dropTable('users');
+exports.down = (knex) => knex.schema.dropTable('users_likes');
