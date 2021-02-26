@@ -25,9 +25,13 @@ module.exports = {
 	async create(req, res, next) {
 		try {
 			const { params } = req.body;
-			const followers = await knex('gain_followers').where({ username: params.username });
+			const { id } = req.token;
+			const followers = await knex('gain_followers').where({ username: params.username, social_media: params.social_media });
 			if (followers.length > 0) return res.status(400).json({ message: 'Já existe uma publicação com esse usuário' });
-			await knex('gain_followers').insert(params);
+			knex.transaction(async () => {
+				await knex('gain_followers').insert(params);
+				await knex('users').where({ id }).decrement({ points: params.lost_points });
+			});
 			return res.status(200).send();
 		} catch (error) {
 			next(error);
