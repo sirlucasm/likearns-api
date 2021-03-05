@@ -29,8 +29,10 @@ routes
     // GAIN FOLLOWERS
     .get('/gain/followers', authentication, GainFollowerController.index)
     .post('/gain/followers/publish', authentication, GainFollowerController.create)
+    .delete('/gain/followers/:id', authentication, GainFollowerController.delete)
     // GAIN LIKES
     .get('/gain/likes', authentication, GainLikeController.index)
+    .delete('/gain/likes/:id', authentication, GainLikeController.delete)
     .post('/gain/likes/publish', authentication, GainLikeController.create);
 
 module.exports = routes;
