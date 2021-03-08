@@ -21,7 +21,8 @@
 		"jsonwebtoken": "^8.5.1",
 		"knex": "^0.21.17",
 		"mysql": "^2.18.1",
-		"nodemailer": "^6.4.17"
+		"nodemailer": "^6.4.17",
+		"puppeteer": "^8.0.0"
 	},
 	"devDependencies": {
 		"eslint": "^7.19.0",

@@ -8,6 +8,7 @@ const UserController = require('./controllers/UserController');
 const MailerController = require('./controllers/MailerController');
 const GainFollowerController = require('./controllers/GainFollowerController');
 const GainLikeController = require('./controllers/GainLikeController');
+const PuppeteerController = require('./controllers/PuppeteerController');
 
 routes
     .get('/', (req, res, next) => {
@@ -33,6 +34,8 @@ routes
     // GAIN LIKES
     .get('/gain/likes', authentication, GainLikeController.index)
     .delete('/gain/likes/:id', authentication, GainLikeController.delete)
-    .post('/gain/likes/publish', authentication, GainLikeController.create);
+    .post('/gain/likes/publish', authentication, GainLikeController.create)
+    // PUPPETEER
+    .get('/puppeteer/instagram/login', authentication, PuppeteerController.twitterLogin);
 
 module.exports = routes;
