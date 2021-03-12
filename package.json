@@ -14,6 +14,7 @@
 	"dependencies": {
 		"@types/dotenv": "^8.2.0",
 		"address": "^1.1.2",
+		"axios": "^0.21.1",
 		"bcrypt": "^5.0.0",
 		"cors": "^2.8.5",
 		"dotenv": "^8.2.0",
@@ -22,7 +23,8 @@
 		"knex": "^0.21.17",
 		"mysql": "^2.18.1",
 		"nodemailer": "^6.4.17",
-		"puppeteer": "^8.0.0"
+		"puppeteer": "^8.0.0",
+		"twitter": "^1.7.1"
 	},
 	"devDependencies": {
 		"eslint": "^7.19.0",

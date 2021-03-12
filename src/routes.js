@@ -9,6 +9,8 @@ const MailerController = require('./controllers/MailerController');
 const GainFollowerController = require('./controllers/GainFollowerController');
 const GainLikeController = require('./controllers/GainLikeController');
 const PuppeteerController = require('./controllers/PuppeteerController');
+const InstagramController = require('./controllers/social_media/InstagramController');
+const TwitterController = require('./controllers/social_media/TwitterController');
 
 routes
     .get('/', (req, res, next) => {
@@ -36,6 +38,10 @@ routes
     .delete('/gain/likes/:id', authentication, GainLikeController.delete)
     .post('/gain/likes/publish', authentication, GainLikeController.create)
     // PUPPETEER
-    .get('/puppeteer/instagram/login', authentication, PuppeteerController.twitterLogin);
+    .get('/puppeteer/instagram/login', authentication, PuppeteerController.twitterLogin)
+    .get('/twitter/followers/list', TwitterController.followersListIds)
+    .get('/twitter/followers/check-friendship', TwitterController.verifyFriendship)
+    .get('/twitter/users/search', TwitterController.searchUser)
+    .post('/twitter/followers/follow', TwitterController.followUser);
 
 module.exports = routes;

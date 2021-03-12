@@ -1,4 +1,4 @@
-const AUTH_URL = ``;
+const axios = require('axios');
 
 module.exports = {
     async auth(req, res, next) {
