@@ -21,6 +21,7 @@
 		"express": "^4.17.1",
 		"jsonwebtoken": "^8.5.1",
 		"knex": "^0.21.17",
+		"login-with-twitter": "^1.2.4",
 		"mysql": "^2.18.1",
 		"nodemailer": "^6.4.17",
 		"puppeteer": "^8.0.0",

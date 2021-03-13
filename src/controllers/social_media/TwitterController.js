@@ -1,9 +1,16 @@
 const Twitter = require('twitter');
+const LoginWithTwitter = require('login-with-twitter');
 
 const client = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY,
     consumer_secret: process.env.TWITTER_API_KEY_SECRET,
     bearer_token: process.env.TWITTER_BEARER_TOKEN
+});
+
+const tw = new LoginWithTwitter({
+	consumerKey: process.env.TWITTER_API_KEY,
+	consumerSecret: process.env.TWITTER_API_KEY_SECRET,
+	callbackUrl: process.env.NODE_ENV !== 'production' ? process.env.URL+'/ganhar-earnscoins' : process.env.URL+'/ganhar-earnscoins'
 });
 
 module.exports = {
@@ -69,6 +76,33 @@ module.exports = {
 
 			const response = await clientUser.get('users/search', params);
 			return res.status(200).json({ id: response[0].id, username: response[0].screen_name });
+		} catch (error) {
+			return Promise.reject(error);
+		}
+	},
+
+	async login(req, res, next) {
+		try {
+			tw.login((err, tokenSecret, url) => {
+				if (err) console.log(err)
+				return res.status(200).json({ authUrl: url, tokenSecret })
+				next();
+			});
+		} catch (error) {
+			return Promise.reject(error);
+		}
+	},
+
+	async callback(req, res, next) {
+		try {
+			const { oauth_token, oauth_verifier, tokenSecret } = req.body;
+			tw.callback({
+				oauth_token: oauth_token,
+				oauth_verifier: oauth_verifier
+			}, tokenSecret, (err, user) => {
+				if (err) console.log(err);
+				return res.status(200).json(user)
+			});
 		} catch (error) {
 			return Promise.reject(error);
 		}

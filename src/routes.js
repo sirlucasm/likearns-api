@@ -39,9 +39,11 @@ routes
     .post('/gain/likes/publish', authentication, GainLikeController.create)
     // PUPPETEER
     .get('/puppeteer/instagram/login', authentication, PuppeteerController.twitterLogin)
-    .get('/twitter/followers/list', TwitterController.followersListIds)
-    .get('/twitter/followers/check-friendship', TwitterController.verifyFriendship)
-    .get('/twitter/users/search', TwitterController.searchUser)
-    .post('/twitter/followers/follow', TwitterController.followUser);
+    .get('/twitter/followers/list', authentication, TwitterController.followersListIds)
+    .get('/twitter/followers/check-friendship', authentication, TwitterController.verifyFriendship)
+    .get('/twitter/users/search', authentication, TwitterController.searchUser)
+    .post('/twitter/followers/follow', authentication, TwitterController.followUser)
+    .get('/twitter/auth', authentication, TwitterController.login)
+    .post('/twitter/auth/callback', authentication, TwitterController.callback);
 
 module.exports = routes;
