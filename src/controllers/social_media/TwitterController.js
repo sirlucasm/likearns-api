@@ -10,7 +10,7 @@ const client = new Twitter({
 const tw = new LoginWithTwitter({
 	consumerKey: process.env.TWITTER_API_KEY,
 	consumerSecret: process.env.TWITTER_API_KEY_SECRET,
-	callbackUrl: process.env.NODE_ENV !== 'production' ? process.env.URL+'/ganhar-earnscoins' : process.env.URL+'/ganhar-earnscoins'
+	callbackUrl: process.env.NODE_ENV !== 'production' ? process.env.REACT_APP_URL+'/ganhar-earnscoins' : process.env.REACT_APP_URL+'/ganhar-earnscoins'
 });
 
 module.exports = {
