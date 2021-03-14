@@ -33,13 +33,18 @@ module.exports = {
 
     async followUser(req, res, next) {
 		try {
-            const { username, userId } = req.body;
+            const { username, twitter } = req.body;
+			const clientUser = new Twitter({
+                consumer_key: process.env.TWITTER_API_KEY,
+                consumer_secret: process.env.TWITTER_API_KEY_SECRET,
+                access_token_key: twitter.userToken,
+                access_token_secret: twitter.userTokenSecret
+            });
 			const params = {
 				screen_name: username,
-				user_id: userId
 			};
 
-			const response = await client.post('friendships/create', params);
+			const response = await clientUser.post('friendships/create', params);
 			return res.status(200).json(response);
 		} catch (error) {
 			return Promise.reject(error);
@@ -48,9 +53,9 @@ module.exports = {
 
     async verifyFriendship(req, res, next) {
 		try {
-            const { username, friendName } = req.query;
+            const { userName, friendName } = req.query;
 			const params = {
-				source_screen_name: username,
+				source_screen_name: userName,
 				target_screen_name: friendName,
 			};
 
