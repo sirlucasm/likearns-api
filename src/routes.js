@@ -1,8 +1,11 @@
 const express = require('express');
 
 const routes = express.Router();
+
+// middlewares
 const authentication = require('./middleware/Authentication');
 const verifyAccount = require('./middleware/VerifyAccount');
+const authPointsToken = require('./middleware/AuthPointsToken');
 
 const UserController = require('./controllers/UserController');
 const MailerController = require('./controllers/MailerController');
@@ -26,6 +29,7 @@ routes
     .get('/users/me', authentication, UserController.me) // current user
     .post('/users/login', UserController.login)
     .post('/users/verify-account', verifyAccount, UserController.verifyAccount)
+    .get('/users/gain-points/following', authentication, authPointsToken, UserController.gainPointsFollowing)
     // MAILER
     .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
     // GAIN

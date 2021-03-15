@@ -2,7 +2,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const knex = require('../config/knex');
 const {
-    createPagination
+    createPagination,
+	calculatePointsToEarn,
+	getDayName
 } = require('../utils');
 
 const referralFriend = async (username) => {
@@ -124,7 +126,7 @@ module.exports = {
 				if (passwordValidate) {
 					const token = jwt.sign({ ...user[0] }, process.env.JWT_PRIVATE_KEY,
 					{
-						expiresIn: '20d',
+						expiresIn: '7d',
 					});
 					return res.status(200).json({ token });
 				}
@@ -141,6 +143,33 @@ module.exports = {
 		try {
 			const { id } = req;
 			await knex('users').update({ verified_email: true, updated_at: knex.fn.now() }).where({ id });
+			return res.status(200).send();
+		} catch (error) {
+			next(error);
+		}
+	},
+
+	async gainPointsFollowing(req, res, next) {
+		try {
+			const { id } = req.token;
+			const { user_id, lost_points, gain_follower_id } = req.pointsToken;
+			knex.transaction(async () => {
+				await knex('users').where({ id })
+					.increment({ points: calculatePointsToEarn(lost_points) })
+					.update({ updated_at: knex.fn.now() });
+				await knex('users_followers')
+					.insert({
+						followed_by_id: id,
+						user_id,
+						day_name: getDayName()
+					});
+				await knex('users').where({ id: user_id })
+					.increment({ followers: 1 })
+					.update({ updated_at: knex.fn.now() });
+				await knex('gain_followers').where({ id: gain_follower_id })
+					.increment({ obtained_followers: 1 })
+					.update({ updated_at: knex.fn.now() });
+			});
 			return res.status(200).send();
 		} catch (error) {
 			next(error);

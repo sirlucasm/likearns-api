@@ -1,5 +1,7 @@
 const Twitter = require('twitter');
 const LoginWithTwitter = require('login-with-twitter');
+const knex = require('../../config/knex');
+const jwt = require('jsonwebtoken');
 
 const client = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY,
@@ -33,7 +35,7 @@ module.exports = {
 
     async followUser(req, res, next) {
 		try {
-            const { username, twitter } = req.body;
+            const { username, twitter, user_id, lost_points, id } = req.body;
 			const clientUser = new Twitter({
                 consumer_key: process.env.TWITTER_API_KEY,
                 consumer_secret: process.env.TWITTER_API_KEY_SECRET,
@@ -44,8 +46,13 @@ module.exports = {
 				screen_name: username,
 			};
 
+			const token = jwt.sign({ user_id, lost_points, gain_follower_id: id }, process.env.JWT_PRIVATE_KEY,
+			{
+				expiresIn: '1h',
+			});
+
 			const response = await clientUser.post('friendships/create', params);
-			return res.status(200).json(response);
+			return res.status(200).json({ twitter: response, token });
 		} catch (error) {
 			return Promise.reject(error);
 		}
@@ -91,7 +98,6 @@ module.exports = {
 			tw.login((err, tokenSecret, url) => {
 				if (err) console.log(err)
 				return res.status(200).json({ authUrl: url, tokenSecret })
-				next();
 			});
 		} catch (error) {
 			return Promise.reject(error);
