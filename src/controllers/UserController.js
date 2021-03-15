@@ -152,16 +152,18 @@ module.exports = {
 	async gainPointsFollowing(req, res, next) {
 		try {
 			const { id } = req.token;
-			const { user_id, lost_points, gain_follower_id } = req.pointsToken;
+			const { user_id, lost_points, gain_follower_id, followers, obtained_followers } = req.pointsToken;
+			const earnPoints = calculatePointsToEarn(lost_points);
 			knex.transaction(async () => {
 				await knex('users').where({ id })
-					.increment({ points: calculatePointsToEarn(lost_points) })
+					.increment({ points: earnPoints, total_points: earnPoints })
 					.update({ updated_at: knex.fn.now() });
 				await knex('users_followers')
 					.insert({
 						followed_by_id: id,
 						user_id,
-						day_name: getDayName()
+						day_name: getDayName(),
+						gain_follower_id
 					});
 				await knex('users').where({ id: user_id })
 					.increment({ followers: 1 })
@@ -169,10 +171,26 @@ module.exports = {
 				await knex('gain_followers').where({ id: gain_follower_id })
 					.increment({ obtained_followers: 1 })
 					.update({ updated_at: knex.fn.now() });
+				// check if followers number has been reached
+				if ((obtained_followers+1) === followers) {
+					await knex('gain_followers').where({ id: gain_follower_id })
+						.update({ finished: true, updated_at: knex.fn.now() });
+				}
 			});
 			return res.status(200).send();
 		} catch (error) {
 			next(error);
 		}
-	}
+	},
+
+	async verifyIfUserFollowed(req, res, next) {
+		try {
+			const { id } = req.token;
+			const { gain_follower_id } = req.query;
+			const followers_log = await knex('users_followers').where({ 'followed_by_id': id, gain_follower_id });
+			return res.status(200).json({ following: followers_log.length > 0 ? true : false});
+		} catch (error) {
+			next(error);
+		}
+	},
 };

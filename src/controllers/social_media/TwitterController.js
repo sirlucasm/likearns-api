@@ -35,7 +35,7 @@ module.exports = {
 
     async followUser(req, res, next) {
 		try {
-            const { username, twitter, user_id, lost_points, id } = req.body;
+            const { username, twitter, user_id, lost_points, id, followers, obtained_followers } = req.body;
 			const clientUser = new Twitter({
                 consumer_key: process.env.TWITTER_API_KEY,
                 consumer_secret: process.env.TWITTER_API_KEY_SECRET,
@@ -46,7 +46,13 @@ module.exports = {
 				screen_name: username,
 			};
 
-			const token = jwt.sign({ user_id, lost_points, gain_follower_id: id }, process.env.JWT_PRIVATE_KEY,
+			const token = jwt.sign({
+				user_id,
+				lost_points,
+				gain_follower_id: id,
+				followers,
+				obtained_followers
+			}, process.env.JWT_PRIVATE_KEY,
 			{
 				expiresIn: '1h',
 			});

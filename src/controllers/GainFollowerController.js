@@ -15,7 +15,8 @@ module.exports = {
 			const followers = await knex('gain_followers')
 				.limit(limit)
 				.offset((page - 1) * limit)
-                .orderBy('id', 'desc');
+                .orderBy('id', 'desc')
+				.where('finished', false);
 			return res.json({ followers, pagination: createPagination(allFollowers.length, page, limit) });
 		} catch (error) {
 			next(error);

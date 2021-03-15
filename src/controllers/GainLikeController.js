@@ -15,7 +15,8 @@ module.exports = {
 			const likes = await knex('gain_likes')
 				.limit(limit)
 				.offset((page - 1) * limit)
-                .orderBy('id', 'desc');
+                .orderBy('id', 'desc')
+				.where('finished', false);
 			return res.json({ likes, pagination: createPagination(allLikes.length, page, limit) });
 		} catch (error) {
 			next(error);

@@ -30,6 +30,7 @@ routes
     .post('/users/login', UserController.login)
     .post('/users/verify-account', verifyAccount, UserController.verifyAccount)
     .get('/users/gain-points/following', authentication, authPointsToken, UserController.gainPointsFollowing)
+    .get('/users/verify-followed', authentication, UserController.verifyIfUserFollowed)
     // MAILER
     .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
     // GAIN
