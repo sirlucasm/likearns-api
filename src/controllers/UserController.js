@@ -70,10 +70,14 @@ module.exports = {
 			params.updated_at = knex.fn.now();
             const { id } = req.token;
             let user;
-            if (params.email || params.username){
-                user = await knex('users').where({ username: params.username }).orWhere({ email: params.email });
+            if (params.username){
+                user = await knex('users').where({ username: params.username });
                 if (user.length > 0) return res.status(400).json({ message: 'Este username/email já está em uso.' });
             }
+			if (params.email) {
+				user = await knex('users').where({ email: params.email });
+				if (user.length > 0) return res.status(400).json({ message: 'Este username/email já está em uso.' });
+			}
 			await knex('users').update(params).where({ id });
 			return res.status(200).send();
 		} catch (error) {
