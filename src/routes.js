@@ -11,6 +11,8 @@ const UserController = require('./controllers/UserController');
 const MailerController = require('./controllers/MailerController');
 const GainFollowerController = require('./controllers/GainFollowerController');
 const GainLikeController = require('./controllers/GainLikeController');
+const UserLikeController = require('./controllers/UserLikeController');
+const UserFollowerController = require('./controllers/UserFollowerController');
 const PuppeteerController = require('./controllers/PuppeteerController');
 const InstagramController = require('./controllers/social_media/InstagramController');
 const TwitterController = require('./controllers/social_media/TwitterController');
@@ -44,6 +46,10 @@ routes
     .get('/gain/likes', authentication, GainLikeController.index)
     .delete('/gain/likes/:id', authentication, GainLikeController.delete)
     .post('/gain/likes/publish', authentication, GainLikeController.create)
+    // USERS LIKES
+    .get('/users-likes', authentication, UserLikeController.index)
+    // USERS FOLLOWERS
+    .get('/users-followers', authentication, UserFollowerController.index)
     // PUPPETEER
     .get('/puppeteer/instagram/login', authentication, PuppeteerController.twitterLogin)
     .get('/twitter/followers/list', authentication, TwitterController.followersListIds)
