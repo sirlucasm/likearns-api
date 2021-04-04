@@ -64,6 +64,38 @@ module.exports = {
 		}
 	},
 
+	async likePost(req, res, next) {
+		try {
+            const { post, twitter, user_id, lost_points, id, likes, obtained_likes } = req.body;
+			const clientUser = new Twitter({
+                consumer_key: process.env.TWITTER_API_KEY,
+                consumer_secret: process.env.TWITTER_API_KEY_SECRET,
+                access_token_key: twitter.userToken,
+                access_token_secret: twitter.userTokenSecret
+            });
+			const params = {
+				id: post.id,
+			};
+
+			const token = jwt.sign({
+				user_id,
+				lost_points,
+				gain_like_id: id,
+				likes,
+				obtained_likes
+			}, process.env.JWT_PRIVATE_KEY,
+			{
+				expiresIn: '1h',
+			});
+
+			const response = await clientUser.post('favorites/create', params);
+			return res.status(200).json({ twitter: response, token });
+		} catch (error) {
+			console.log(error)
+			return Promise.reject(error);
+		}
+	},
+
     async verifyFriendship(req, res, next) {
 		try {
             const { userName, friendName } = req.query;

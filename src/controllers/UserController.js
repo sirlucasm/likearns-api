@@ -186,6 +186,40 @@ module.exports = {
 			next(error);
 		}
 	},
+	
+	async gainPointsLiking(req, res, next) {
+		try {
+			const { id } = req.token;
+			const { user_id, lost_points, gain_like_id, likes, obtained_likes } = req.pointsToken;
+			const earnPoints = calculatePointsToEarn(lost_points);
+			knex.transaction(async () => {
+				await knex('users').where({ id })
+					.increment({ points: earnPoints, total_points: earnPoints })
+					.update({ updated_at: knex.fn.now() });
+				await knex('users_likes')
+					.insert({
+						liked_by_id: id,
+						user_id,
+						day_name: getDayName(),
+						gain_like_id
+					});
+				await knex('users').where({ id: user_id })
+					.increment({ likes: 1 })
+					.update({ updated_at: knex.fn.now() });
+				await knex('gain_likes').where({ id: gain_like_id })
+					.increment({ obtained_likes: 1 })
+					.update({ updated_at: knex.fn.now() });
+				// check if likes number has been reached
+				if ((obtained_likes+1) === likes) {
+					await knex('gain_likes').where({ id: gain_like_id })
+						.update({ finished: true, updated_at: knex.fn.now() });
+				}
+			});
+			return res.status(200).send();
+		} catch (error) {
+			next(error);
+		}
+	},
 
 	async verifyIfUserFollowed(req, res, next) {
 		try {
@@ -193,6 +227,17 @@ module.exports = {
 			const { gain_follower_id } = req.query;
 			const followers_log = await knex('users_followers').where({ 'followed_by_id': id, gain_follower_id });
 			return res.status(200).json({ following: followers_log.length > 0 ? true : false});
+		} catch (error) {
+			next(error);
+		}
+	},
+
+	async verifyIfUserPostLiked(req, res, next) {
+		try {
+			const { id } = req.token;
+			const { gain_like_id } = req.query;
+			const likes_log = await knex('users_likes').where({ 'liked_by_id': id, gain_like_id });
+			return res.status(200).json({ liking: likes_log.length > 0 ? true : false});
 		} catch (error) {
 			next(error);
 		}

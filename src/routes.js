@@ -30,7 +30,9 @@ routes
     .post('/users/login', UserController.login)
     .post('/users/verify-account', verifyAccount, UserController.verifyAccount)
     .get('/users/gain-points/following', authentication, authPointsToken, UserController.gainPointsFollowing)
+    .get('/users/gain-points/liking', authentication, authPointsToken, UserController.gainPointsLiking)
     .get('/users/verify-followed', authentication, UserController.verifyIfUserFollowed)
+    .get('/users/verify-liked', authentication, UserController.verifyIfUserPostLiked)
     // MAILER
     .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
     // GAIN
@@ -48,6 +50,7 @@ routes
     .get('/twitter/followers/check-friendship', authentication, TwitterController.verifyFriendship)
     .get('/twitter/users/search', authentication, TwitterController.searchUser)
     .post('/twitter/followers/follow', authentication, TwitterController.followUser)
+    .post('/twitter/posts/like', authentication, TwitterController.likePost)
     .get('/twitter/auth', authentication, TwitterController.login)
     .post('/twitter/auth/callback', authentication, TwitterController.callback);
 
