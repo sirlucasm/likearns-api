@@ -91,8 +91,7 @@ module.exports = {
 			const response = await clientUser.post('favorites/create', params);
 			return res.status(200).json({ twitter: response, token });
 		} catch (error) {
-			console.log(error)
-			return Promise.reject(error);
+			return res.status(400).json(error);
 		}
 	},
 
