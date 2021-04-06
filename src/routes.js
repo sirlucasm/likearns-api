@@ -35,6 +35,7 @@ routes
     .get('/users/gain-points/liking', authentication, authPointsToken, UserController.gainPointsLiking)
     .get('/users/verify-followed', authentication, UserController.verifyIfUserFollowed)
     .get('/users/verify-liked', authentication, UserController.verifyIfUserPostLiked)
+    .post('/users/verify-authenticity', authentication, UserController.verifyUserAuthenticity)
     // MAILER
     .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
     // GAIN

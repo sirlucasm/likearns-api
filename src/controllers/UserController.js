@@ -242,4 +242,30 @@ module.exports = {
 			next(error);
 		}
 	},
+
+	async verifyUserAuthenticity(req, res, next) {
+		try {
+			const { id } = req.token;
+			const { password } = req.body;
+			let user = await knex('users').where({ id });
+			user = user[0];
+			if (!password) res.status(400).json({ message: 'Nada recebido no body :(' })
+			if (user) {
+				const passwordValidate = await bcrypt.compare(
+					password,
+					user.password
+				);
+				if (passwordValidate) {
+					const token = jwt.sign({ id: user.id }, process.env.JWT_PRIVATE_KEY,
+					{
+						expiresIn: '3h',
+					});
+					return res.status(200).json({ token });
+				}
+				return res.status(401).json({ message: 'É você mesmo? 👀 A senha digitada está incorreta. 🤔' });
+			}
+		} catch (error) {
+			return res.status(401).json({ message: 'Falha na autenticação.' });
+		}
+	}
 };
