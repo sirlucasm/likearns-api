@@ -27,7 +27,7 @@ routes
     .get('/users', UserController.index)
     .post('/users', UserController.create)
     .put('/users', authentication, UserController.update)
-    .delete('/users', authentication, UserController.delete)
+    .post('/users/delete', authentication, UserController.delete)
     .get('/users/me', authentication, UserController.me) // current user
     .post('/users/login', UserController.login)
     .post('/users/verify-account', verifyAccount, UserController.verifyAccount)

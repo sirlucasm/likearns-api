@@ -88,7 +88,9 @@ module.exports = {
     async delete(req, res, next) {
 		try {
             const { id } = req.token;
-			await knex('users').where({ id }).delete();
+			const { token } = req.body;
+			const tokenDecoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+			if (id === tokenDecoded.id)	await knex('users').where({ id }).delete();
 			return res.status(200).send();
 		} catch (error) {
 			next(error);
