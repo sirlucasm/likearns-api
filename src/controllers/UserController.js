@@ -90,7 +90,9 @@ module.exports = {
             const { id } = req.token;
 			const { token } = req.body;
 			const tokenDecoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
-			if (id === tokenDecoded.id)	await knex('users').where({ id }).delete();
+			if (id === tokenDecoded.id)	{
+				await knex('users').where({ id }).update({ deleted_at: knex.fn.now() });
+			}
 			return res.status(200).send();
 		} catch (error) {
 			next(error);
@@ -100,7 +102,7 @@ module.exports = {
     async me(req, res, next) {
 		try {
 			const { id } = req.token;
-			const fetchMe = await knex('users').where({ id });
+			const fetchMe = await knex('users').where({ id, deleted_at: null });
 			let me = {};
 			if (fetchMe.length > 0) {
 				fetchMe.map((response) => {
@@ -120,9 +122,9 @@ module.exports = {
             const { params } = req.body;
             let user;
             if (Object.keys(params).includes('username'))
-                user = await knex('users').where({ username: params.username });
+                user = await knex('users').where({ username: params.username, deleted_at: null });
             else if (Object.keys(params).includes('email'))
-                user = await knex('users').where({ email: params.email });
+                user = await knex('users').where({ email: params.email, deleted_at: null });
 			
 			if (user.length > 0) {
 				const passwordValidate = await bcrypt.compare(
@@ -148,7 +150,7 @@ module.exports = {
 	async verifyAccount(req, res, next) {
 		try {
 			const { id } = req;
-			await knex('users').update({ verified_email: true, updated_at: knex.fn.now() }).where({ id });
+			await knex('users').update({ verified_email: true, updated_at: knex.fn.now() }).where({ id, deleted_at: null });
 			return res.status(200).send();
 		} catch (error) {
 			next(error);
