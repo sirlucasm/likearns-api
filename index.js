@@ -31,4 +31,8 @@ let port = 8080;
 
 if (process.env.NODE_ENV === 'production') port = process.env.PORT || 3000
 
+console.log(process.env.NODE_ENV);
+console.log(process.env.DB_HOST);
+console.log(process.env.DB_NAME);
+
 app.listen(port, () => console.log(`\n->  @@ Likearns API is running on ${process.env.APP_URL}\n`));
