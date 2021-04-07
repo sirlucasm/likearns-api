@@ -7,7 +7,7 @@
 		"start": "node index.js",
 		"production": "node index.js",
 		"dev": "nodemon index.js",
-		"poststart": "yarn knex migrate:latest"
+		"prestart": "yarn knex migrate:latest"
 	},
 	"repository": "https://github.com/sirlucasm/likearns-api",
 	"author": "Lucas Matheus",
