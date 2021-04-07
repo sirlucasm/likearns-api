@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "node index.js",
 		"production": "node index.js",
-                "dev": "nodemon index.js"
+		"dev": "nodemon index.js"
 	},
 	"repository": "https://github.com/sirlucasm/likearns-api",
 	"author": "Lucas Matheus",
