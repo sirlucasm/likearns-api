@@ -4,8 +4,9 @@
 	"description": "API for Likearns website",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon index.js",
-		"production": "node index.js"
+		"start": "node index.js",
+		"production": "node index.js",
+                "dev": "nodemon index.js"
 	},
 	"repository": "https://github.com/sirlucasm/likearns-api",
 	"author": "Lucas Matheus",
