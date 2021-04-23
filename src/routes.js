@@ -37,6 +37,7 @@ routes
     .get('/users/verify-liked', authentication, UserController.verifyIfUserPostLiked)
     .post('/users/verify-authenticity', authentication, UserController.verifyUserAuthenticity)
     .post('/users/reset-password', verifyAccount, UserController.resetPassword)
+    .get('/users/top-sharers', UserController.getTopSharers)
     // MAILER
     .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
     .post('/mail/send-reset-password', MailerController.sendResetPasswordEmail)

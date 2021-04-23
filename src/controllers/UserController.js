@@ -288,5 +288,17 @@ module.exports = {
 		} catch (error) {
 			return res.status(401).json({ message: 'Falha na autenticação.' });
 		}
-	}
+	},
+
+	async getTopSharers(req, res, next) {
+		try {
+			const LIMIT = 50;
+			const users = await knex('users')
+				.orderBy('invited_friends', 'desc')
+				.limit(LIMIT);
+			return res.status(200).json({ users });
+		} catch (error) {
+			next(error);
+		}
+	},
 };
