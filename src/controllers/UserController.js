@@ -86,6 +86,21 @@ module.exports = {
 			next(error);
 		} return null;
     },
+
+	async resetPassword(req, res, next) {
+		try {
+			const { id } = req;
+			const { params } = req.body;
+			const encryptedPassword = await bcrypt.hash(params.password, 10); // encrypt password
+			if (id)	{
+				await knex('users').where({ id }).update({ password: encryptedPassword, updated_at: knex.fn.now() });
+				return res.status(200).send();
+			}
+			return res.status(404).json({ message: 'Usuário não existe' });
+		} catch (error) {
+			next(error);
+		}
+    },
     
     async delete(req, res, next) {
 		try {

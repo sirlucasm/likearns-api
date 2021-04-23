@@ -36,8 +36,10 @@ routes
     .get('/users/verify-followed', authentication, UserController.verifyIfUserFollowed)
     .get('/users/verify-liked', authentication, UserController.verifyIfUserPostLiked)
     .post('/users/verify-authenticity', authentication, UserController.verifyUserAuthenticity)
+    .post('/users/reset-password', verifyAccount, UserController.resetPassword)
     // MAILER
     .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
+    .post('/mail/send-reset-password', MailerController.sendResetPasswordEmail)
     // GAIN
     // GAIN FOLLOWERS
     .get('/gain/followers', authentication, GainFollowerController.index)
