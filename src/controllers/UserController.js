@@ -6,6 +6,7 @@ const {
 	calculatePointsToEarn,
 	getDayName
 } = require('../utils');
+const address = require('address');
 
 const referralFriend = async (username) => {
 	try {
@@ -49,6 +50,7 @@ module.exports = {
             if (user.length > 0) return res.status(400).json({ message: 'Esta conta já existe' });
             const encryptedPassword = await bcrypt.hash(params.password, 10); // encrypt password
             params.password = encryptedPassword;
+			params.current_ip = address.ip();
             const newUserId = await knex('users').insert(params); // database insert
             const token = jwt.sign({
                 id: newUserId[0],
