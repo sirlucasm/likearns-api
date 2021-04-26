@@ -294,6 +294,7 @@ module.exports = {
 		try {
 			const LIMIT = 50;
 			const users = await knex('users')
+				.whereNot({ 'invited_friends': 0 })
 				.orderBy('invited_friends', 'desc')
 				.limit(LIMIT);
 			return res.status(200).json({ users });
