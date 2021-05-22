@@ -19,6 +19,7 @@ module.exports = {
             params.token = token.split('').reverse().join('');
             params.email = email;
             params.name = name.split(' ')[0];
+            params.verifyUrl = process.env.REACT_APP_URL + '/minha-conta/ativar?tk=' + params.token;
 
             const subject = '[no-reply] Confirme sua conta';
 
@@ -42,8 +43,6 @@ module.exports = {
             const { email } = req.body;
             const templateHbsPath = path.resolve(__dirname, '..', 'templates', 'mail', 'resetPassword.hbs');
             const user = await knex('users').where({ email }).first();
-            params.email = email;
-            params.name = user.name;
 
             const subject = '[no-reply] Esqueceu a senha?';
 
@@ -52,6 +51,8 @@ module.exports = {
                     {
                         expiresIn: '10h',
                     });
+                params.email = email;
+                params.name = user.name;
                 params.token = token.split('').reverse().join('');
                 params.resetUrl = process.env.REACT_APP_URL + '/minha-conta/trocar-senha?tk=' + params.token;
                 delete user.password;

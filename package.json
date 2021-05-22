@@ -15,7 +15,6 @@
 	"private": true,
 	"dependencies": {
 		"@types/dotenv": "^8.2.0",
-		"address": "^1.1.2",
 		"axios": "^0.21.1",
 		"bcrypt": "^5.0.0",
 		"cors": "^2.8.5",
@@ -23,6 +22,7 @@
 		"express": "^4.17.1",
 		"fs": "^0.0.1-security",
 		"handlebars": "^4.7.7",
+		"instagram-web-api": "^2.2.2",
 		"jsonwebtoken": "^8.5.1",
 		"knex": "^0.21.17",
 		"login-with-twitter": "^1.2.4",

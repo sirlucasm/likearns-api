@@ -6,7 +6,8 @@ const {
 	calculatePointsToEarn,
 	getDayName
 } = require('../utils');
-const address = require('address');
+const InstagramController = require('./social_media/InstagramController');
+const TwitterController = require('./social_media/TwitterController');
 
 const referralFriend = async (username) => {
 	try {
@@ -47,10 +48,11 @@ module.exports = {
             const { params } = req.body;
 			const referralCode = params.referral_code_applied;
             const user = await knex('users').where({ username: params.username }).orWhere({ email: params.email });
+			const ipAddress = await knex('users').where({ current_ip: params.current_ip }).first();
+			if (ipAddress && ipAddress.current_ip == params.current_ip) return res.status(401).json({ message: 'Não foi possível criar sua conta. 😞' });
             if (user.length > 0) return res.status(400).json({ message: 'Esta conta já existe' });
             const encryptedPassword = await bcrypt.hash(params.password, 10); // encrypt password
             params.password = encryptedPassword;
-			params.current_ip = address.ip();
             const newUserId = await knex('users').insert(params); // database insert
             const token = jwt.sign({
                 id: newUserId[0],
@@ -298,6 +300,73 @@ module.exports = {
 				.orderBy('invited_friends', 'desc')
 				.limit(LIMIT);
 			return res.status(200).json({ users });
+		} catch (error) {
+			next(error);
+		}
+	},
+
+	async claimReward(req, res, next) {
+		try {
+            const { id } = req.token;
+			const { reward, points } = req.rewardToken;
+			const now = knex.fn.now();
+
+			knex.transaction(async () => {
+				await knex('users').update({
+					updated_at: now,
+					[reward]: now
+				}).where({ id });
+				await knex('users').increment({ points }).where({ id });
+			});
+			return res.status(200).send();
+		} catch (error) {
+			next(error);
+		} return null;
+    },
+
+	async resetReward(req, res, next) {
+		try {
+            const { id } = req.token;
+			const { reward } = req.rewardToken;
+			const now = knex.fn.now();
+
+			knex.transaction(async () => {
+				await knex('users').update({
+					updated_at: now,
+					[reward]: null
+				}).where({ id });
+			});
+			return res.status(200).send();
+		} catch (error) {
+			next(error);
+		} return null;
+    },
+
+	async importProfilePicture(req, res, next) {
+		try {
+            const { id } = req.token;
+			const { username, socialMedia } = req.body;
+			let profilePicUrl;
+			const now = knex.fn.now();
+
+			if (socialMedia == 1) profilePicUrl = await InstagramController.getProfilePicture(username);
+			if (socialMedia == 2) profilePicUrl = await TwitterController.getProfilePicture(username);
+
+			await knex('users').update({
+				updated_at: now,
+				social_profile_picture: profilePicUrl
+			}).where({ id });
+			return res.status(200).send();
+		} catch (error) {
+			next(error);
+		} return null;
+    },
+
+	async isVerifiedEmail(req, res, next) {
+		try {
+			const { id } = req.token;
+			const user = await knex('users').where({ id }).first();
+			return res.status(200).json({ isVerifiedEmail: user.verified_email == 1 });
 		} catch (error) {
 			next(error);
 		}

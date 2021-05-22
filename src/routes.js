@@ -6,6 +6,7 @@ const routes = express.Router();
 const authentication = require('./middleware/Authentication');
 const verifyAccount = require('./middleware/VerifyAccount');
 const authPointsToken = require('./middleware/AuthPointsToken');
+const rewardToken = require('./middleware/RewardToken');
 
 const UserController = require('./controllers/UserController');
 const MailerController = require('./controllers/MailerController');
@@ -38,6 +39,10 @@ routes
     .post('/users/verify-authenticity', authentication, UserController.verifyUserAuthenticity)
     .post('/users/reset-password', verifyAccount, UserController.resetPassword)
     .get('/users/top-sharers', UserController.getTopSharers)
+    .get('/users/is-verified-email', authentication, UserController.isVerifiedEmail)
+    .post('/users/claim-reward', authentication, rewardToken, UserController.claimReward)
+    .post('/users/reset-reward', authentication, rewardToken, UserController.resetReward)
+    .post('/users/import-profile-picture', authentication, UserController.importProfilePicture)
     // MAILER
     .get('/mail/send-verification', authentication, MailerController.sendConfirmationEmail)
     .post('/mail/send-reset-password', MailerController.sendResetPasswordEmail)
@@ -56,12 +61,16 @@ routes
     .get('/users-followers', authentication, UserFollowerController.index)
     // PUPPETEER
     .get('/puppeteer/instagram/login', authentication, PuppeteerController.twitterLogin)
+    // TWITTER
     .get('/twitter/followers/list', authentication, TwitterController.followersListIds)
     .get('/twitter/followers/check-friendship', authentication, TwitterController.verifyFriendship)
     .get('/twitter/users/search', authentication, TwitterController.searchUser)
     .post('/twitter/followers/follow', authentication, TwitterController.followUser)
     .post('/twitter/posts/like', authentication, TwitterController.likePost)
     .get('/twitter/auth', authentication, TwitterController.login)
-    .post('/twitter/auth/callback', authentication, TwitterController.callback);
+    .post('/twitter/auth/callback', authentication, TwitterController.callback)
+    
+    // INSTAGRAM
+    .post('/instagram/login', authentication, InstagramController.login);
 
 module.exports = routes;

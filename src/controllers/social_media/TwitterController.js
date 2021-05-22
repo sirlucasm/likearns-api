@@ -12,7 +12,7 @@ const client = new Twitter({
 const tw = new LoginWithTwitter({
 	consumerKey: process.env.TWITTER_API_KEY,
 	consumerSecret: process.env.TWITTER_API_KEY_SECRET,
-	callbackUrl: process.env.NODE_ENV !== 'production' ? process.env.REACT_APP_URL+'/ganhar-earnscoins' : process.env.REACT_APP_URL+'/ganhar-earnscoins'
+	callbackUrl: process.env.REACT_APP_URL+'/ganhar-earnscoins'
 });
 
 module.exports = {
@@ -154,5 +154,14 @@ module.exports = {
 		} catch (error) {
 			return Promise.reject(error);
 		}
+	},
+
+	async getProfilePicture(username) {
+		const params = {
+			screen_name: username,
+		};
+
+		const response = await client.get('users/show', params);
+		return response.profile_image_url_https;
 	},
 }
