@@ -8,6 +8,7 @@ const {
 } = require('../utils');
 const InstagramController = require('./social_media/InstagramController');
 const TwitterController = require('./social_media/TwitterController');
+const UserNotificationController = require('./UserNotificationController');
 
 const referralFriend = async (username) => {
 	try {
@@ -179,7 +180,7 @@ module.exports = {
 	async gainPointsFollowing(req, res, next) {
 		try {
 			const { id } = req.token;
-			const { user_id, lost_points, gain_follower_id, followers, obtained_followers } = req.pointsToken;
+			const { user_id, lost_points, gain_follower_id, followers, obtained_followers, social_media, current_user } = req.pointsToken;
 			const earnPoints = calculatePointsToEarn(lost_points);
 			knex.transaction(async () => {
 				await knex('users').where({ id })
@@ -198,6 +199,12 @@ module.exports = {
 				await knex('gain_followers').where({ id: gain_follower_id })
 					.increment({ obtained_followers: 1 })
 					.update({ updated_at: knex.fn.now() });
+				await UserNotificationController.create({
+					type: 1,
+					social_media,
+					user_id: current_user,
+					to_user_id: user_id,
+				});
 				// check if followers number has been reached
 				if ((obtained_followers+1) === followers) {
 					await knex('gain_followers').where({ id: gain_follower_id })
@@ -213,7 +220,7 @@ module.exports = {
 	async gainPointsLiking(req, res, next) {
 		try {
 			const { id } = req.token;
-			const { user_id, lost_points, gain_like_id, likes, obtained_likes } = req.pointsToken;
+			const { user_id, lost_points, gain_like_id, likes, obtained_likes, social_media, current_user } = req.pointsToken;
 			const earnPoints = calculatePointsToEarn(lost_points);
 			knex.transaction(async () => {
 				await knex('users').where({ id })
@@ -232,6 +239,12 @@ module.exports = {
 				await knex('gain_likes').where({ id: gain_like_id })
 					.increment({ obtained_likes: 1 })
 					.update({ updated_at: knex.fn.now() });
+				await UserNotificationController.create({
+					type: 2,
+					social_media,
+					user_id: current_user,
+					to_user_id: user_id,
+				});
 				// check if likes number has been reached
 				if ((obtained_likes+1) === likes) {
 					await knex('gain_likes').where({ id: gain_like_id })

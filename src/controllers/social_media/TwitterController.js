@@ -35,7 +35,7 @@ module.exports = {
 
     async followUser(req, res, next) {
 		try {
-            const { username, twitter, user_id, lost_points, id, followers, obtained_followers } = req.body;
+            const { username, twitter, user_id, lost_points, id, followers, obtained_followers, social_media, current_user } = req.body;
 			const clientUser = new Twitter({
                 consumer_key: process.env.TWITTER_API_KEY,
                 consumer_secret: process.env.TWITTER_API_KEY_SECRET,
@@ -51,7 +51,9 @@ module.exports = {
 				lost_points,
 				gain_follower_id: id,
 				followers,
-				obtained_followers
+				obtained_followers,
+				social_media,
+				current_user
 			}, process.env.JWT_PRIVATE_KEY,
 			{
 				expiresIn: '1h',
@@ -66,7 +68,7 @@ module.exports = {
 
 	async likePost(req, res, next) {
 		try {
-            const { post, twitter, user_id, lost_points, id, likes, obtained_likes } = req.body;
+            const { post, twitter, user_id, lost_points, id, likes, obtained_likes, social_media, current_user } = req.body;
 			const clientUser = new Twitter({
                 consumer_key: process.env.TWITTER_API_KEY,
                 consumer_secret: process.env.TWITTER_API_KEY_SECRET,
@@ -82,7 +84,9 @@ module.exports = {
 				lost_points,
 				gain_like_id: id,
 				likes,
-				obtained_likes
+				obtained_likes,
+				social_media,
+				current_user
 			}, process.env.JWT_PRIVATE_KEY,
 			{
 				expiresIn: '1h',

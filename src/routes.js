@@ -14,6 +14,7 @@ const GainFollowerController = require('./controllers/GainFollowerController');
 const GainLikeController = require('./controllers/GainLikeController');
 const UserLikeController = require('./controllers/UserLikeController');
 const UserFollowerController = require('./controllers/UserFollowerController');
+const UserNotificationController = require('./controllers/UserNotificationController');
 const PuppeteerController = require('./controllers/PuppeteerController');
 const InstagramController = require('./controllers/social_media/InstagramController');
 const TwitterController = require('./controllers/social_media/TwitterController');
@@ -69,8 +70,9 @@ routes
     .post('/twitter/posts/like', authentication, TwitterController.likePost)
     .get('/twitter/auth', authentication, TwitterController.login)
     .post('/twitter/auth/callback', authentication, TwitterController.callback)
-    
     // INSTAGRAM
-    .post('/instagram/login', authentication, InstagramController.login);
+    .post('/instagram/login', authentication, InstagramController.login)
+    // USERS NOTIFICATIONS
+    .get('/users-notifications', authentication, UserNotificationController.getUserNotifications);
 
 module.exports = routes;
