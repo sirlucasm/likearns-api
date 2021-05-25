@@ -73,6 +73,7 @@ routes
     // INSTAGRAM
     .post('/instagram/login', authentication, InstagramController.login)
     // USERS NOTIFICATIONS
-    .get('/users-notifications', authentication, UserNotificationController.getUserNotifications);
+    .get('/users-notifications', authentication, UserNotificationController.getUserNotifications)
+    .post('/users-notifications/read-notification', authentication, UserNotificationController.setNotificationReaded);
 
 module.exports = routes;
