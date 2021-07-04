@@ -29,13 +29,14 @@ module.exports = {
 		} return null;
 	},
 
-	async getProfilePicture(userName) {
+	async getProfilePicture(instagramToken) {
 		const { username, password } = {
 			username: process.env.INSTAGRAM_USERNAME,
 			password: process.env.INSTAGRAM_PASSWORD
 		};
+		const userLogged = jwt.verify(instagramToken, process.env.JWT_PRIVATE_KEY);
 		const client = await auth({ username, password });
-		const user = await client.getUserByUsername({ username: userName });
+		const user = await client.getUserByUsername({ username: userLogged.username });
 		return user.profile_pic_url_hd;
 	},
 }

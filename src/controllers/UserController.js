@@ -358,11 +358,11 @@ module.exports = {
 	async importProfilePicture(req, res, next) {
 		try {
             const { id } = req.token;
-			const { username, socialMedia } = req.body;
+			const { username, socialMedia, instagramToken } = req.body;
 			let profilePicUrl;
 			const now = knex.fn.now();
 
-			if (socialMedia == 1) profilePicUrl = await InstagramController.getProfilePicture(username);
+			if (socialMedia == 1) profilePicUrl = await InstagramController.getProfilePicture(instagramToken);
 			if (socialMedia == 2) profilePicUrl = await TwitterController.getProfilePicture(username);
 
 			await knex('users').update({
