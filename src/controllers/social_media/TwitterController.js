@@ -1,6 +1,5 @@
 const Twitter = require('twitter');
 const LoginWithTwitter = require('login-with-twitter');
-const knex = require('../../config/knex');
 const jwt = require('jsonwebtoken');
 
 const client = new Twitter({
