@@ -70,7 +70,7 @@ module.exports = {
 		} return null;
 	},
 
-	async getMediaId(req, res, next) {
+	async getMediaData(req, res, next) {
 		try {
 			const { post_url } = req.query;
 			
@@ -84,7 +84,7 @@ module.exports = {
 				}
 			});
 			if (embed) {
-				return res.status(200).json({ mediaId: embed.media_id });
+				return res.status(200).json(embed);
 			} return res.status(400).json({ message: 'Erro ao adquirir Instagram Media ID' });
 		} catch (error) {
 			next(error);
