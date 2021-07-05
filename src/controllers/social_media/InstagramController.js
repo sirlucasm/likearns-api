@@ -1,5 +1,6 @@
 const Instagram = require('instagram-web-api');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 const auth = async ({ username, password }) => {
 	const client = new Instagram({ username, password });
@@ -64,6 +65,27 @@ module.exports = {
 
 				return res.status(200).json({ token });
 			} return res.status(401).json({ message: 'Usuário não autenticado.' });
+		} catch (error) {
+			next(error);
+		} return null;
+	},
+
+	async getMediaId(req, res, next) {
+		try {
+			const { post_url } = req.query;
+			
+			const { data: embed } = await axios.get('http://api.instagram.com/oembed', {
+				params: {
+					url: post_url
+				},
+				headers: {
+					'Content-Type': 'application/json; charset=utf-8',
+					'Access-Control-Allow-Credentials': 'true'
+				}
+			});
+			if (embed) {
+				return res.status(200).json({ mediaId: embed.media_id });
+			} return res.status(400).json({ message: 'Erro ao adquirir Instagram Media ID' });
 		} catch (error) {
 			next(error);
 		} return null;
