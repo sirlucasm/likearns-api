@@ -39,4 +39,33 @@ module.exports = {
 		const user = await client.getUserByUsername({ username: userLogged.username });
 		return user.profile_pic_url_hd;
 	},
+
+	async likePost(req, res, next) {
+		try {
+			const { username, password } = req.instagramToken;
+			const { postId, user_id, lost_points, id, likes, obtained_likes, social_media, current_user } = req.body;
+			const client = await auth({ username, password });
+
+			if (client) {				
+				const token = jwt.sign({
+					user_id,
+					lost_points,
+					gain_like_id: id,
+					likes,
+					obtained_likes,
+					social_media,
+					current_user
+				}, process.env.JWT_PRIVATE_KEY,
+				{
+					expiresIn: '1h',
+				});
+
+				await client.like({ mediaId: postId });
+
+				return res.status(200).json({ token });
+			} return res.status(401).json({ message: 'Usuário não autenticado.' });
+		} catch (error) {
+			next(error);
+		} return null;
+	},
 }

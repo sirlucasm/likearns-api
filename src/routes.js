@@ -7,6 +7,7 @@ const authentication = require('./middleware/Authentication');
 const verifyAccount = require('./middleware/VerifyAccount');
 const authPointsToken = require('./middleware/AuthPointsToken');
 const rewardToken = require('./middleware/RewardToken');
+const instagramTokenValidator = require('./middleware/InstagramTokenValidator');
 
 const UserController = require('./controllers/UserController');
 const MailerController = require('./controllers/MailerController');
@@ -72,6 +73,7 @@ routes
     .post('/twitter/auth/callback', authentication, TwitterController.callback)
     // INSTAGRAM
     .post('/instagram/login', authentication, InstagramController.login)
+    .post('/instagram/posts/like', authentication, instagramTokenValidator, InstagramController.likePost)
     // USERS NOTIFICATIONS
     .get('/users-notifications', authentication, UserNotificationController.getUserNotifications)
     .post('/users-notifications/read-notification', authentication, UserNotificationController.setNotificationReaded);
