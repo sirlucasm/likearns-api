@@ -70,6 +70,37 @@ module.exports = {
 		} return null;
 	},
 
+	async followUser(req, res, next) {
+		try {
+			const { username, password } = req.instagramToken;
+			const { username: instagramUsername, user_id, lost_points, id, followers, obtained_followers, social_media, current_user } = req.body;
+			const client = await auth({ username, password });
+
+			if (client) {				
+				const token = jwt.sign({
+					user_id,
+					lost_points,
+					gain_follower_id: id,
+					followers,
+					obtained_followers,
+					social_media,
+					current_user
+				}, process.env.JWT_PRIVATE_KEY,
+				{
+					expiresIn: '1h',
+				});
+
+				const instagramUser = await client.getUserByUsername({ username: instagramUsername });
+
+				await client.follow({ userId: instagramUser.id });
+
+				return res.status(200).json({ token });
+			} return res.status(401).json({ message: 'Usuário não autenticado.' });
+		} catch (error) {
+			next(error);
+		} return null;
+	},
+
 	async getMediaData(req, res, next) {
 		try {
 			const { post_url } = req.query;

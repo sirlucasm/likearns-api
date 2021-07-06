@@ -74,6 +74,7 @@ routes
     // INSTAGRAM
     .post('/instagram/login', authentication, InstagramController.login)
     .post('/instagram/posts/like', authentication, instagramTokenValidator, InstagramController.likePost)
+    .post('/instagram/followers/follow', authentication, instagramTokenValidator, InstagramController.followUser)
     .get('/instagram/posts/getMediaData', authentication, InstagramController.getMediaData)
     // USERS NOTIFICATIONS
     .get('/users-notifications', authentication, UserNotificationController.getUserNotifications)
