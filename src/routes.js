@@ -16,6 +16,7 @@ const GainLikeController = require('./controllers/GainLikeController');
 const UserLikeController = require('./controllers/UserLikeController');
 const UserFollowerController = require('./controllers/UserFollowerController');
 const UserNotificationController = require('./controllers/UserNotificationController');
+const UserWithdrawController = require('./controllers/UserWithdrawController');
 const PuppeteerController = require('./controllers/PuppeteerController');
 const InstagramController = require('./controllers/social_media/InstagramController');
 const TwitterController = require('./controllers/social_media/TwitterController');
@@ -78,6 +79,8 @@ routes
     .get('/instagram/posts/getMediaData', authentication, InstagramController.getMediaData)
     // USERS NOTIFICATIONS
     .get('/users-notifications', authentication, UserNotificationController.getUserNotifications)
-    .post('/users-notifications/read-notification', authentication, UserNotificationController.setNotificationReaded);
+    .post('/users-notifications/read-notification', authentication, UserNotificationController.setNotificationReaded)
+    // USERS WITHDRAWS
+    .post('/users-withdraws/paypal', authentication, UserWithdrawController.withPaypal);
 
 module.exports = routes;
