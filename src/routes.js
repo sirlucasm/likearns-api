@@ -81,6 +81,7 @@ routes
     .get('/users-notifications', authentication, UserNotificationController.getUserNotifications)
     .post('/users-notifications/read-notification', authentication, UserNotificationController.setNotificationReaded)
     // USERS WITHDRAWS
-    .post('/users-withdraws/paypal', authentication, UserWithdrawController.withPaypal);
+    .post('/users-withdraws/paypal/order', authentication, UserWithdrawController.createPaypalOrder)
+    .post('/users-withdraws/paypal/order/capture', authentication, UserWithdrawController.capturePaypalOrder);
 
 module.exports = routes;
