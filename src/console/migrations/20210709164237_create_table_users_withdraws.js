@@ -5,6 +5,7 @@ exports.up = (knex) => knex.schema.createTable('users_withdraws', (t) => {
     t.string('pix_key');
     t.string('email_address');
     t.decimal('value').notNull();
+    t.integer('lost_points').notNull();
     t.integer('user_id').notNull().unsigned();
 	t.integer('status').defaultTo(0);
 

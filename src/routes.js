@@ -81,6 +81,7 @@ routes
     .get('/users-notifications', authentication, UserNotificationController.getUserNotifications)
     .post('/users-notifications/read-notification', authentication, UserNotificationController.setNotificationReaded)
     // USERS WITHDRAWS
+    .get('/users-withdraws', authentication, UserWithdrawController.index)
     .post('/users-withdraws/paypal/order', authentication, UserWithdrawController.createPaypalOrder)
     .post('/users-withdraws/paypal/order/capture', authentication, UserWithdrawController.capturePaypalOrder);
 
