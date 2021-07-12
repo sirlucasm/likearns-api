@@ -17,7 +17,7 @@ module.exports = {
             if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'))
 
 			const allUsersWithdraws = await knex('users_withdraws');
-			const users_withdraws = knex('users_withdraws')
+			const users_withdraws = await knex('users_withdraws')
 				.limit(limit)
 				.offset((page - 1) * limit)
                 .orderBy('id', 'desc')
