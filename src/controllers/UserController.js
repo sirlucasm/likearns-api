@@ -10,15 +10,24 @@ const InstagramController = require('./social_media/InstagramController');
 const TwitterController = require('./social_media/TwitterController');
 const UserNotificationController = require('./UserNotificationController');
 
-const referralFriend = async (username) => {
+const REFERRAL_FRIEND_POINTS = 875;
+const INVITED_USER_POINTS = 375;
+
+const referralFriend = async (username, invitedUsername) => {
 	try {
 		await knex.transaction(async () => {
-			const friend = knex('users').where({ username });
+			const friend = knex('users').where({ username }).first();
 			await friend.increment({
-				points: 150,
+				points: REFERRAL_FRIEND_POINTS,
 				invited_friends: 1,
-				invited_total_points: 150
-			})
+				invited_total_points: REFERRAL_FRIEND_POINTS,
+				total_points: REFERRAL_FRIEND_POINTS,
+			});
+			const invitedUser = knex('users').where({ username: invitedUsername }).first()
+			await invitedUser.increment({
+				points: INVITED_USER_POINTS,
+				total_points: INVITED_USER_POINTS,
+			});
 		})
 	} catch (error) {
 		console.log(error);
@@ -60,9 +69,9 @@ module.exports = {
                 ...params
 			}, process.env.JWT_PRIVATE_KEY,
 			{
-				expiresIn: '10h',
+				expiresIn: '1d',
             });
-			if (referralCode) await referralFriend(referralCode);
+			if (referralCode) await referralFriend(referralCode, params.username);
             return res.status(201).json({ token });
         } catch (error) {
 			next(error);
