@@ -14,23 +14,23 @@ module.exports = {
 
 			const allUsersWithdraws = await knex('users_withdraws');
 			let query = knex('users_withdraws')
+				.select(
+					'users_withdraws.*',
+					knex.raw(`json_object(
+						'id', users.id,
+						'username', users.username,
+						'email', users.email,
+						'social_profile_picture', users.social_profile_picture
+					) as user`)
+				)
+				.join('users', 'users.id', 'users_withdraws.user_id')
 				.limit(limit)
 				.offset((page - 1) * limit)
 				.orderBy('id', 'desc');
 			let pagination;
 
-			if (search) {
+			if (!!search) {
 				query = query
-					.select(
-						'users_withdraws.*',
-						knex.raw(`json_object(
-							'id', users.id,
-							'username', users.username,
-							'email', users.email,
-							'social_profile_picture', users.social_profile_picture
-						) as user`)
-					)
-					.join('users', 'users.id', 'users_withdraws.user_id')
 					.where('users.username', 'like', '%'+ search +'%');
 			}
 			const users_withdraws = await query;
@@ -64,7 +64,7 @@ module.exports = {
 				.orderBy('id', 'desc');
 			let pagination;
 
-			if (search) query = query.where('username', 'like', '%'+ search +'%');
+			if (!!search) query = query.where('username', 'like', '%'+ search +'%');
 
 			const users = await query;
 
