@@ -36,23 +36,6 @@ const referralFriend = async (username, invitedUsername) => {
 };
 
 module.exports = {
-	async index(req, res, next) {
-		try {
-            const page = parseInt(req.query.page);
-            const limit = parseInt(req.query.limit);
-            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'))
-			const allUsers = await knex('users');
-			const users = await knex('users')
-				.limit(limit)
-				.offset((page - 1) * limit)
-                .orderBy('id', 'desc');
-            users.map((data) => delete data.password);
-			return res.json({ users, pagination: createPagination(allUsers.length, page, limit) });
-		} catch (error) {
-			next(error);
-		} return null;
-    },
-
     async create(req, res, next) {
 		try {
             const { params } = req.body;

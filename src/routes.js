@@ -4,6 +4,7 @@ const routes = express.Router();
 
 // middlewares
 const authentication = require('./middleware/Authentication');
+const onlyModerators = require('./middleware/OnlyModerators');
 const verifyAccount = require('./middleware/VerifyAccount');
 const authPointsToken = require('./middleware/AuthPointsToken');
 const rewardToken = require('./middleware/RewardToken');
@@ -20,6 +21,7 @@ const UserWithdrawController = require('./controllers/UserWithdrawController');
 const PuppeteerController = require('./controllers/PuppeteerController');
 const InstagramController = require('./controllers/social_media/InstagramController');
 const TwitterController = require('./controllers/social_media/TwitterController');
+const ModeratorController = require('./controllers/ModeratorController');
 
 routes
     .get('/', (req, res, next) => {
@@ -28,7 +30,6 @@ routes
 
     
     // USERS
-    .get('/users', UserController.index)
     .post('/users', UserController.create)
     .put('/users', authentication, UserController.update)
     .post('/users/delete', authentication, UserController.delete)
@@ -83,6 +84,9 @@ routes
     // USERS WITHDRAWS
     .get('/users-withdraws', authentication, UserWithdrawController.index)
     .post('/users-withdraws/paypal/order', authentication, UserWithdrawController.createPaypalOrder)
-    .post('/users-withdraws/paypal/order/capture', authentication, UserWithdrawController.capturePaypalOrder);
+    .post('/users-withdraws/paypal/order/capture', authentication, UserWithdrawController.capturePaypalOrder)
+	// MODERATORS
+	.get('/moderators/users-withdraws', onlyModerators, ModeratorController.withdrawList)
+	.get('/moderators/users', onlyModerators, ModeratorController.usersList);
 
 module.exports = routes;
