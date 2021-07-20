@@ -87,6 +87,7 @@ routes
     .post('/users-withdraws/paypal/order/capture', authentication, UserWithdrawController.capturePaypalOrder)
 	// MODERATORS
 	.get('/moderators/users-withdraws', onlyModerators, ModeratorController.withdrawList)
+	.get('/moderators/total-data', onlyModerators, ModeratorController.totalData)
 	.get('/moderators/users', onlyModerators, ModeratorController.usersList);
 
 module.exports = routes;

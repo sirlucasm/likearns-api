@@ -77,5 +77,23 @@ module.exports = {
 		} catch (error) {
 			next(error);
 		}
-	}
+	},
+
+	async totalData(req, res, next) {
+		try {
+			const users = (await knex('users')).length;
+			const users_withdraws = (await knex('users_withdraws')).length;
+			const users_followers = (await knex('users_followers')).length;
+			const users_likes = (await knex('users_likes')).length;
+
+			return res.json({
+				users: { total: users },
+				users_withdraws: { total: users_withdraws },
+				users_followers: { total: users_followers },
+				users_likes: { total: users_likes }
+			});
+		} catch (error) {
+			next(error);
+		}
+	},
 }
