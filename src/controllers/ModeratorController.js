@@ -3,6 +3,9 @@ const {
     createPagination,
 } = require('../utils');
 
+// services
+const PaypalService = require('../services/PaypalService');
+
 module.exports = {
 	async withdrawList(req, res, next) {
 		try {
@@ -96,4 +99,27 @@ module.exports = {
 			next(error);
 		}
 	},
+
+	async capturePaypalOrder(req, res, next) {
+        try {
+            const { withdraw_id, order_id } = req.body;
+            const orderCaptured = await PaypalService.captureOrder(order_id);
+			
+			if (orderCaptured.id == order_id && orderCaptured.status == 'COMPLETED') {
+				await knex.transaction(async () => {
+					await knex('users_withdraws')
+						.where({ id: withdraw_id })
+						.update({
+							updated_at: knex.fn.now(),
+							status: 1
+						});
+				});
+
+				return res.status(200).json(orderCaptured);
+			}
+            return res.status(500).json({ message: 'Não foi possível concluir o pagamento, pois o Admin ainda não aprovou.' });
+        } catch (error) {
+            next(error);
+        }
+    }
 }

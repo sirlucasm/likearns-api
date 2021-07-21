@@ -1,7 +1,7 @@
 exports.up = (knex) => knex.schema.createTable('users_withdraws', (t) => {
 	t.increments('id').primary();
     t.integer('withdraw_type').notNull();
-    t.integer('order_id').notNull();
+    t.string('order_id').notNull();
     t.string('pix_key');
     t.string('email_address');
     t.decimal('value').notNull();

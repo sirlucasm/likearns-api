@@ -1,7 +1,5 @@
 const axios = require('axios');
-
-const PAYPAL_OAUTH_API = 'https://api-m.sandbox.paypal.com/v1/oauth2/token/';
-const PAYPAL_ORDER_API = 'https://api-m.sandbox.paypal.com/v2/checkout/orders/';
+const { PAYPAL_OAUTH_API, PAYPAL_ORDER_API } = require('../constants/paypal');
 
 const OAuth = async () => {
     try {

@@ -84,9 +84,9 @@ routes
     // USERS WITHDRAWS
     .get('/users-withdraws', authentication, UserWithdrawController.index)
     .post('/users-withdraws/paypal/order', authentication, UserWithdrawController.createPaypalOrder)
-    .post('/users-withdraws/paypal/order/capture', authentication, UserWithdrawController.capturePaypalOrder)
 	// MODERATORS
-	.get('/moderators/users-withdraws', onlyModerators, ModeratorController.withdrawList)
+	.get('/moderators/users-withdraws/paypal/orders', onlyModerators, ModeratorController.withdrawList)
+	.post('/moderators/users-withdraws/paypal/orders/capture', onlyModerators, ModeratorController.capturePaypalOrder)
 	.get('/moderators/total-data', onlyModerators, ModeratorController.totalData)
 	.get('/moderators/users', onlyModerators, ModeratorController.usersList);
 
