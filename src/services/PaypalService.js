@@ -1,72 +1,40 @@
 const axios = require('axios');
-const { PAYPAL_OAUTH_API, PAYPAL_ORDER_API } = require('../constants/paypal');
-
-const OAuth = async () => {
-    try {
-        // base64 crypt Basic OAuth
-        const basicAuth = Buffer.from(`${process.env.PAYPAL_CLIENT}:${process.env.PAYPAL_SECRET}`, 'utf8').toString('base64');
-
-        // get access token with OAuth
-        const { data: auth } = await axios({
-            url: PAYPAL_OAUTH_API,
-            method: 'post',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization: `Basic ${basicAuth}`
-            },
-            params: {
-                grant_type: 'client_credentials'
-            }
-        });
-
-        return auth;
-    } catch (error) {
-        return error.response;
-    }
-}
+const { PAYPAL_PAYMENT_API, RETURN_URL } = require('../constants/paypal');
 
 module.exports = {
-    createOrder: async (email_address, value) => {
-        try {
-            const auth = await OAuth();
-            const params = {
-                intent: 'CAPTURE',
-                purchase_units: [{
-                    amount: {
-                        currency_code: 'BRL',
-                        value
-                    },
-                    payee: { email_address }
-                }]
-            };
+	createOrder: async (params) => {
+		try {
+			const data = {
+				actionType: "PAY", // Payment action type
+				currencyCode: "BRL", // Payment currency code
+				receiverList: {
+					receiver: [{
+						amount: params.value, // Payment amount
+						email: params.email_address // Receiver's email address
+					}]
+				},
+				returnUrl: RETURN_URL, // Redirect URL after approval
+				cancelUrl: RETURN_URL, // Redirect URL after cancellation
+				requestEnvelope: {
+					errorLanguage: "pt_BR", // Language used to display errors
+					detailLevel: "ReturnAll" // Error detail level
+				}
+			}
 
-            const { data: order } = await axios.post(PAYPAL_ORDER_API, params, {
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${auth.access_token}`
-                },
-            });
+			const { data: order } = await axios.post(PAYPAL_PAYMENT_API, data, {
+				headers: {
+					'X-PAYPAL-SECURITY-USERID': process.env.PAYPAL_SECURITY_USERID,
+					'X-PAYPAL-SECURITY-PASSWORD': process.env.PAYPAL_SECURITY_PASSWORD,
+					'X-PAYPAL-SECURITY-SIGNATURE': process.env.PAYPAL_SECURITY_SIGNATURE,
+					'X-PAYPAL-REQUEST-DATA-FORMAT': 'JSON',
+					'X-PAYPAL-RESPONSE-DATA-FORMAT': 'JSON',
+					'X-PAYPAL-APPLICATION-ID': process.env.PAYPAL_APPLICATION_ID
+				},
+			});
 
-            return order;
-        } catch (error) {
-            return error.response;
-        }
-    },
-
-    captureOrder: async (orderId) => {
-        try {
-            const auth = await OAuth();
-            const { dada: orderCaptured } = await axios.post(`${PAYPAL_ORDER_API}${orderId}/capture`, {}, {
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${auth.access_token}`
-                },
-            });
-
-            return orderCaptured;
-        } catch (error) {
-            return error.response;
-        }
-    }
+			return order;
+		} catch (error) {
+			return error.response;
+		}
+	}
 }

@@ -31,11 +31,11 @@ module.exports = {
         try {
 			const { id } = req.token;
             const params = req.body;
-            const order = await PaypalService.createOrder(params.email_address, params.value);
+            const order = await PaypalService.createOrder(params);
 
-			if (!order) return res.status(400).json({ message: 'Não foi possível criar retirada do seu dinheiro' });
+			if (order.paymentExecStatus !== 'CREATED') return res.status(400).json({ message: 'Não foi possível criar retirada do seu dinheiro' });
 			params.user_id = id;
-            params.order_id = order.id;
+            params.order_id = order.payKey;
             await knex.transaction(async () => {
                 await knex('users').decrement({
                     points: params.lost_points

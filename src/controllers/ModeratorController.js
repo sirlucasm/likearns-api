@@ -2,6 +2,7 @@ const knex = require('../config/knex');
 const {
     createPagination,
 } = require('../utils');
+const { PAYPAL_APPROVE_PAYMENT_URL } = require('../constants/paypal');
 
 // services
 const PaypalService = require('../services/PaypalService');
@@ -100,24 +101,59 @@ module.exports = {
 		}
 	},
 
-	async capturePaypalOrder(req, res, next) {
-        try {
-            const { withdraw_id, order_id } = req.body;
-            const orderCaptured = await PaypalService.captureOrder(order_id);
-			
-			if (orderCaptured.id == order_id && orderCaptured.status == 'COMPLETED') {
-				await knex.transaction(async () => {
-					await knex('users_withdraws')
-						.where({ id: withdraw_id })
-						.update({
-							updated_at: knex.fn.now(),
-							status: 1
-						});
-				});
+	async getApprovePaypalOrderUrl(req, res) {
+		const { order_id, withdraw_id } = req.query;
+		const url = `${PAYPAL_APPROVE_PAYMENT_URL}${order_id}`;
 
-				return res.status(200).json(orderCaptured);
-			}
-            return res.status(500).json({ message: 'Não foi possível concluir o pagamento, pois o Admin ainda não aprovou.' });
+		await knex.transaction(async () => {
+			await knex('users_withdraws')
+				.where({ id: withdraw_id })
+				.update({
+					updated_at: knex.fn.now(),
+					approved_order: true
+				});
+		});
+
+		return res.status(200).json({ url });
+	},
+
+	async approvePaypalOrderPayment(req, res, next) {
+        try {
+            const { withdraw_id } = req.body;
+			
+			await knex.transaction(async () => {
+				await knex('users_withdraws')
+					.where({ id: withdraw_id })
+					.update({
+						updated_at: knex.fn.now(),
+						status: 1
+					});
+			});
+
+			return res.status(200).send();
+        } catch (error) {
+            next(error);
+        }
+    },
+
+	async rejectPaypalOrderPayment(req, res, next) {
+        try {
+            const { id, user, reject_reason, lost_points } = req.body;
+			
+			await knex.transaction(async () => {
+				await knex('users_withdraws')
+					.where({ id })
+					.update({
+						updated_at: knex.fn.now(),
+						status: 3,
+						reject_reason,
+					});
+				await knex('users')
+					.increment({ points: lost_points })
+					.where({ id: user.id })
+			});
+
+			return res.status(200).send();
         } catch (error) {
             next(error);
         }

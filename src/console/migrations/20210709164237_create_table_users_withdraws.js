@@ -4,6 +4,8 @@ exports.up = (knex) => knex.schema.createTable('users_withdraws', (t) => {
     t.string('order_id').notNull();
     t.string('pix_key');
     t.string('email_address');
+    t.string('reject_reason');
+    t.boolean('approved_order').defaultTo(false);
     t.decimal('value').notNull();
     t.integer('lost_points').notNull();
     t.integer('user_id').notNull().unsigned();

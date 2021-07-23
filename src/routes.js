@@ -83,10 +83,12 @@ routes
     .post('/users-notifications/read-notification', authentication, UserNotificationController.setNotificationReaded)
     // USERS WITHDRAWS
     .get('/users-withdraws', authentication, UserWithdrawController.index)
-    .post('/users-withdraws/paypal/order', authentication, UserWithdrawController.createPaypalOrder)
+    .post('/users-withdraws/paypal/orders', authentication, UserWithdrawController.createPaypalOrder)
 	// MODERATORS
 	.get('/moderators/users-withdraws/paypal/orders', onlyModerators, ModeratorController.withdrawList)
-	.post('/moderators/users-withdraws/paypal/orders/capture', onlyModerators, ModeratorController.capturePaypalOrder)
+	.get('/moderators/users-withdraws/paypal/orders/approve-url', onlyModerators, ModeratorController.getApprovePaypalOrderUrl)
+	.post('/moderators/users-withdraws/paypal/orders/approve', onlyModerators, ModeratorController.approvePaypalOrderPayment)
+	.post('/moderators/users-withdraws/paypal/orders/reject', onlyModerators, ModeratorController.rejectPaypalOrderPayment)
 	.get('/moderators/total-data', onlyModerators, ModeratorController.totalData)
 	.get('/moderators/users', onlyModerators, ModeratorController.usersList);
 
