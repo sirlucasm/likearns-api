@@ -25,4 +25,47 @@ module.exports = {
 			next(error);
 		} return null;
     },
+
+	async likesHistory(req, res, next) {
+		try {
+            const page = parseInt(req.query.page);
+            const limit = parseInt(req.query.limit);
+            const social_media = req.query.social_media;
+			const filters = req.query.filters;
+			const { id } = req.token;
+
+            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
+
+			let users_likes = knex('users_likes')
+                .select('users_likes.*',
+					knex.raw(`json_object(
+						'id', users.id,
+						'username', users.username,
+						'email', users.email,
+						'social_profile_picture', users.social_profile_picture
+					) as user`),
+					knex.raw(`json_object(
+						'obtained_likes', gain_likes.obtained_likes,
+						'social_media', gain_likes.social_media
+					) as gain_like`)
+				)
+                .join('gain_likes', 'users_likes.gain_like_id', 'gain_likes.id')
+				.join('users', 'gain_likes.user_id', 'users.id');
+
+			if (filters.action === 1) users_likes.where('gain_likes.social_media', social_media).andWhere('users_likes.liked_by_id', id);
+			else if (filters.action === 2) users_likes.where('gain_likes.social_media', social_media).andWhere('users_likes.user_id', id);
+			
+			users_likes = await users_likes;
+
+			users_likes.map(data => {
+				delete data.user_id;
+				delete data.liked_by_id;
+				delete data.gain_like_id;
+			})
+
+			return res.json(users_likes);
+		} catch (error) {
+			next(error);
+		} return null;
+    },
 }

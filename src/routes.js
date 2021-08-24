@@ -61,8 +61,10 @@ routes
     .post('/gain/likes/publish', authentication, GainLikeController.create)
     // USERS LIKES
     .get('/users-likes', authentication, UserLikeController.index)
+    .get('/users-likes/history', authentication, UserLikeController.likesHistory)
     // USERS FOLLOWERS
     .get('/users-followers', authentication, UserFollowerController.index)
+    .get('/users-followers/history', authentication, UserFollowerController.followersHistory)
     // PUPPETEER
     .get('/puppeteer/instagram/login', authentication, PuppeteerController.twitterLogin)
     // TWITTER
