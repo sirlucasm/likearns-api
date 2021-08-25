@@ -68,6 +68,8 @@ module.exports = {
 				delete data.user_id;
 				delete data.followed_by_id;
 				delete data.gain_follower_id;
+				data.user = JSON.parse(data.user);
+				data.gain_followers = JSON.parse(data.gain_followers);
 			})
 
 			return res.json({ users_followers, pagination });

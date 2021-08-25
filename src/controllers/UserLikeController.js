@@ -66,6 +66,8 @@ module.exports = {
 				delete data.user_id;
 				delete data.liked_by_id;
 				delete data.gain_like_id;
+				data.user = JSON.parse(data.user);
+				data.gain_like = JSON.parse(data.gain_like);
 			})
 
 			return res.json({ users_likes, pagination });
