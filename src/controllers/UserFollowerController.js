@@ -33,7 +33,7 @@ module.exports = {
             const page = parseInt(req.query.page);
             const limit = parseInt(req.query.limit);
             const social_media = req.query.social_media;
-			const filters = req.query.filters;
+			const action = req.query.action;
 			const { id } = req.token;
 
             if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
@@ -54,10 +54,15 @@ module.exports = {
                 .join('gain_followers', 'users_followers.gain_follower_id', 'gain_followers.id')
 				.join('users', 'gain_followers.user_id', 'users.id');
 
-			if (filters.action === 1) users_followers.where('gain_followers.social_media', social_media).andWhere('users_followers.followed_by_id', id);
-			else if (filters.action === 2) users_followers.where('gain_followers.social_media', social_media).andWhere('users_followers.user_id', id);
+			if (action === 1) users_followers.where('gain_followers.social_media', social_media).andWhere('users_followers.followed_by_id', id);
+			else if (action === 2) users_followers.where('gain_followers.social_media', social_media).andWhere('users_followers.user_id', id);
 			
-			users_followers = await users_followers;
+			const pagination = createPagination((await users_followers).length, page, limit);
+
+			users_followers = await users_followers
+				.limit(limit)
+				.offset((page - 1) * limit)
+				.orderBy('id', 'desc');
 
 			users_followers.map(data => {
 				delete data.user_id;
@@ -65,7 +70,7 @@ module.exports = {
 				delete data.gain_follower_id;
 			})
 
-			return res.json(users_followers);
+			return res.json({ users_followers, pagination });
 		} catch (error) {
 			next(error);
 		} return null;

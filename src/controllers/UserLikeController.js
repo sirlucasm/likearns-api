@@ -31,7 +31,7 @@ module.exports = {
             const page = parseInt(req.query.page);
             const limit = parseInt(req.query.limit);
             const social_media = req.query.social_media;
-			const filters = req.query.filters;
+			const action = req.query.action;
 			const { id } = req.token;
 
             if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
@@ -52,10 +52,15 @@ module.exports = {
                 .join('gain_likes', 'users_likes.gain_like_id', 'gain_likes.id')
 				.join('users', 'gain_likes.user_id', 'users.id');
 
-			if (filters.action === 1) users_likes.where('gain_likes.social_media', social_media).andWhere('users_likes.liked_by_id', id);
-			else if (filters.action === 2) users_likes.where('gain_likes.social_media', social_media).andWhere('users_likes.user_id', id);
-			
-			users_likes = await users_likes;
+			if (action === 1) users_likes.where('gain_likes.social_media', social_media).andWhere('users_likes.liked_by_id', id);
+			else if (action === 2) users_likes.where('gain_likes.social_media', social_media).andWhere('users_likes.user_id', id);
+
+			const pagination = createPagination((await users_likes).length, page, limit);
+
+			users_likes = await users_likes
+				.limit(limit)
+				.offset((page - 1) * limit)
+				.orderBy('id', 'desc');
 
 			users_likes.map(data => {
 				delete data.user_id;
@@ -63,7 +68,7 @@ module.exports = {
 				delete data.gain_like_id;
 			})
 
-			return res.json(users_likes);
+			return res.json({ users_likes, pagination });
 		} catch (error) {
 			next(error);
 		} return null;
