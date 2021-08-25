@@ -57,10 +57,10 @@ module.exports = {
                 .join('gain_followers', 'users_followers.gain_follower_id', 'gain_followers.id')
 				.join('users', 'gain_followers.user_id', 'users.id');
 				
-			if (!!social_media) users_followers.where('gain_followers.social_media', social_media);
-
 			if (action == 1) users_followers.where('users_followers.followed_by_id', id);
-			if (action == 2) users_followers.where('users_followers.user_id', id);
+			if (action == 0 || action == 2) users_followers.where('users_followers.user_id', id);
+
+			if (!!social_media && social_media > 0) users_followers.where('gain_followers.social_media', social_media);
 			
 			const pagination = createPagination((await users_followers).length, page, limit);
 
