@@ -45,15 +45,20 @@ module.exports = {
 						'social_profile_picture', users.social_profile_picture
 					) as user`),
 					knex.raw(`json_object(
+						'likes', gain_likes.likes,
 						'obtained_likes', gain_likes.obtained_likes,
-						'social_media', gain_likes.social_media
+						'social_media', gain_likes.social_media,
+						'lost_points', gain_likes.lost_points,
+						'finished', gain_likes.finished
 					) as gain_like`)
 				)
                 .join('gain_likes', 'users_likes.gain_like_id', 'gain_likes.id')
 				.join('users', 'gain_likes.user_id', 'users.id');
 
-			if (action === 1) users_likes.where('gain_likes.social_media', social_media).andWhere('users_likes.liked_by_id', id);
-			else if (action === 2) users_likes.where('gain_likes.social_media', social_media).andWhere('users_likes.user_id', id);
+			if (!!social_media) users_likes.where('gain_likes.social_media', social_media);
+
+			if (action == 1) users_likes.where('users_likes.liked_by_id', id);
+			if (action == 2) users_likes.where('users_likes.user_id', id);
 
 			const pagination = createPagination((await users_likes).length, page, limit);
 

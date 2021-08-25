@@ -47,15 +47,20 @@ module.exports = {
 						'social_profile_picture', users.social_profile_picture
 					) as user`),
 					knex.raw(`json_object(
+						'followers', gain_followers.followers,
 						'obtained_followers', gain_followers.obtained_followers,
-						'social_media', gain_followers.social_media
-					) as gain_followers`)
+						'social_media', gain_followers.social_media,
+						'lost_points', gain_followers.lost_points,
+						'finished', gain_followers.finished
+					) as gain_follower`)
 				)
                 .join('gain_followers', 'users_followers.gain_follower_id', 'gain_followers.id')
 				.join('users', 'gain_followers.user_id', 'users.id');
+				
+			if (!!social_media) users_followers.where('gain_followers.social_media', social_media);
 
-			if (action === 1) users_followers.where('gain_followers.social_media', social_media).andWhere('users_followers.followed_by_id', id);
-			else if (action === 2) users_followers.where('gain_followers.social_media', social_media).andWhere('users_followers.user_id', id);
+			if (action == 1) users_followers.where('users_followers.followed_by_id', id);
+			if (action == 2) users_followers.where('users_followers.user_id', id);
 			
 			const pagination = createPagination((await users_followers).length, page, limit);
 
@@ -69,7 +74,7 @@ module.exports = {
 				delete data.followed_by_id;
 				delete data.gain_follower_id;
 				data.user = JSON.parse(data.user);
-				data.gain_followers = JSON.parse(data.gain_followers);
+				data.gain_follower = JSON.parse(data.gain_follower);
 			})
 
 			return res.json({ users_followers, pagination });
