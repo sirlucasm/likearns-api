@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const knex = require('../config/knex');
 const {
-    createPagination,
 	calculatePointsToEarn,
 	getDayName
 } = require('../utils');
@@ -23,12 +22,12 @@ const referralFriend = async (username, invitedUsername) => {
 				invited_total_points: REFERRAL_FRIEND_POINTS,
 				total_points: REFERRAL_FRIEND_POINTS,
 			});
-			const invitedUser = knex('users').where({ username: invitedUsername }).first()
+			const invitedUser = knex('users').where({ username: invitedUsername }).first();
 			await invitedUser.increment({
 				points: INVITED_USER_POINTS,
 				total_points: INVITED_USER_POINTS,
 			});
-		})
+		});
 	} catch (error) {
 		console.log(error);
 		return error;
@@ -277,7 +276,7 @@ module.exports = {
 			const { password } = req.body;
 			let user = await knex('users').where({ id });
 			user = user[0];
-			if (!password) res.status(400).json({ message: 'Nada recebido no body :(' })
+			if (!password) res.status(400).json({ message: 'Nada recebido no body :(' });
 			if (user) {
 				const passwordValidate = await bcrypt.compare(
 					password,

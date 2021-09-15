@@ -8,10 +8,7 @@
         "ecmaVersion": 12
     },
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
+        "indent": "off",
         "linebreak-style": [
             "error",
             "windows"
@@ -26,7 +23,7 @@
         ],
         "class-methods-use-this": "off",
 		"no-param-reassign": "off",
-		"camelcase": "error",
+		"camelcase": "off",
 		"no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
 		"no-tabs": "off",
 		"no-alert": "off",
@@ -34,6 +31,7 @@
 		"import/order": "off",
 		"consistent-return": "off",
 		"line-breaks": "off",
-		"radix": "off"
+		"radix": "off",
+        "no-undef": "off"
     }
 }
