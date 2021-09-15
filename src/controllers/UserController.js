@@ -10,7 +10,7 @@ const TwitterController = require('./social_media/TwitterController');
 const UserNotificationController = require('./UserNotificationController');
 
 const REFERRAL_FRIEND_POINTS = 875;
-const INVITED_USER_POINTS = 375;
+const INVITED_USER_POINTS = 625;
 
 const referralFriend = async (username, invitedUsername) => {
 	try {
