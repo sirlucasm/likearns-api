@@ -4,9 +4,6 @@ const {
 } = require('../utils');
 const { PAYPAL_APPROVE_PAYMENT_URL } = require('../constants/paypal');
 
-// services
-const PaypalService = require('../services/PaypalService');
-
 module.exports = {
 	async withdrawList(req, res, next) {
 		try {
@@ -14,7 +11,7 @@ module.exports = {
             const limit = parseInt(req.query.limit);
             const { search } = req.query;
 
-            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'))
+            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
 
 			const allUsersWithdraws = await knex('users_withdraws');
 			let query = knex('users_withdraws')
@@ -33,7 +30,7 @@ module.exports = {
 				.orderBy('id', 'desc');
 			let pagination;
 
-			if (!!search) {
+			if (search) {
 				query = query
 					.where('users.username', 'like', '%'+ search +'%');
 			}
@@ -49,7 +46,7 @@ module.exports = {
 				pagination = createPagination(users_withdraws.length, page, limit);
 			}
 			
-			return res.json({ users_withdraws, pagination })
+			return res.json({ users_withdraws, pagination });
 		} catch (error) {
 			next(error);
 		}
@@ -60,7 +57,7 @@ module.exports = {
 		const limit = parseInt(req.query.limit);
 		const { search } = req.query;
 		try {
-            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'))
+            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
 			const allUsers = await knex('users');
 			let query = knex('users')
 				.limit(limit)
@@ -68,7 +65,7 @@ module.exports = {
 				.orderBy('id', 'desc');
 			let pagination;
 
-			if (!!search) query = query.where('username', 'like', '%'+ search +'%');
+			if (search) query = query.where('username', 'like', '%'+ search +'%');
 
 			const users = await query;
 
@@ -150,7 +147,7 @@ module.exports = {
 					});
 				await knex('users')
 					.increment({ points: lost_points })
-					.where({ id: user.id })
+					.where({ id: user.id });
 			});
 
 			return res.status(200).send();
@@ -158,4 +155,4 @@ module.exports = {
             next(error);
         }
     }
-}
+};

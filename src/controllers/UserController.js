@@ -320,7 +320,7 @@ module.exports = {
 					updated_at: now,
 					[reward]: now
 				}).where({ id });
-				await knex('users').increment({ points }).where({ id });
+				await knex('users').increment({ points, total_points: points }).where({ id });
 			});
 			return res.status(200).send();
 		} catch (error) {
