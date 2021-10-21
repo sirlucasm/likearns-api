@@ -25,7 +25,7 @@ const ModeratorController = require('./controllers/ModeratorController');
 
 routes
     .get('/', (req, res, next) => {
-        res.send("Welcome to Likearns API");
+        res.send('Welcome to Likearns API');
     })
 
     

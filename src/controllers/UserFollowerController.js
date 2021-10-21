@@ -1,8 +1,6 @@
 const knex = require('../config/knex');
 const {
     createPagination,
-	calculatePointsToEarn,
-	getDayName
 } = require('../utils');
 
 module.exports = {
@@ -12,7 +10,7 @@ module.exports = {
             const limit = parseInt(req.query.limit);
             const social_media = req.query.social_media;
 			const { id } = req.token;
-            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'))
+            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
 			const users_followers = await knex('users_followers')
                 .select('users_followers.day_name', 'gain_followers.obtained_followers as obtained_values', 'gain_followers.social_media')
                 .join('gain_followers', 'users_followers.gain_follower_id', 'gain_followers.id')
@@ -21,7 +19,7 @@ module.exports = {
             if (users_followers.length <= 0) return res.json([{
                 day_name: 'Nenhum dado capturado',
                 obtained_followers: 0
-            }])
+            }]);
 			return res.json(users_followers);
 		} catch (error) {
 			next(error);
@@ -75,11 +73,11 @@ module.exports = {
 				delete data.gain_follower_id;
 				data.user = JSON.parse(data.user);
 				data.gain_follower = JSON.parse(data.gain_follower);
-			})
+			});
 
 			return res.json({ users_followers, pagination });
 		} catch (error) {
 			next(error);
 		} return null;
     },
-}
+};
