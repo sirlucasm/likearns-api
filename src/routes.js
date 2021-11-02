@@ -22,6 +22,7 @@ const PuppeteerController = require('./controllers/PuppeteerController');
 const InstagramController = require('./controllers/social_media/InstagramController');
 const TwitterController = require('./controllers/social_media/TwitterController');
 const ModeratorController = require('./controllers/ModeratorController');
+const AlertsController = require('./controllers/AlertsController');
 
 routes
     .get('/', (req, res, next) => {
@@ -92,6 +93,10 @@ routes
 	.post('/moderators/users-withdraws/paypal/orders/approve', onlyModerators, ModeratorController.approvePaypalOrderPayment)
 	.post('/moderators/users-withdraws/paypal/orders/reject', onlyModerators, ModeratorController.rejectPaypalOrderPayment)
 	.get('/moderators/total-data', onlyModerators, ModeratorController.totalData)
-	.get('/moderators/users', onlyModerators, ModeratorController.usersList);
+	.get('/moderators/users', onlyModerators, ModeratorController.usersList)
+    .get('/moderators/alerts', onlyModerators, AlertsController.all)
+    .post('/moderators/alerts', onlyModerators, AlertsController.create)
+    .patch('/moderators/alerts/:id', onlyModerators, AlertsController.update)
+    .delete('/moderators/alerts/:id', onlyModerators, AlertsController.delete);
 
 module.exports = routes;
