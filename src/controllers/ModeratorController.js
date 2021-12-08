@@ -71,8 +71,8 @@ module.exports = {
 
 			if (users.length > 0) {
 				users.map((data) => delete data.password);
-				pagination = createPagination(allUsers.length, page, limit);
-			} else pagination = createPagination(users.length, page, limit);
+				pagination = createPagination(users.length, page, limit);
+			} else pagination = createPagination(allUsers.length, page, limit);
 
 			return res.json({ users, pagination });
 		} catch (error) {
