@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const knex = require('../config/knex');
 const {
     createPagination,
@@ -14,7 +13,7 @@ module.exports = {
 			const page = parseInt(req.query.page);
             const limit = parseInt(req.query.limit);
 
-            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'))
+            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
 
 			const allUsersWithdraws = await knex('users_withdraws');
 			const users_withdraws = await knex('users_withdraws')
@@ -22,7 +21,8 @@ module.exports = {
 				.offset((page - 1) * limit)
                 .orderBy('id', 'desc')
 				.where({ user_id: id });
-			return res.json({ users_withdraws, pagination: createPagination(allUsersWithdraws.length, page, limit) })
+				
+			return res.json({ users_withdraws, pagination: createPagination(allUsersWithdraws.length, page, limit) });
 		} catch (error) {
 			next(error);
 		}

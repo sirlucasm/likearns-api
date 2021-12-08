@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 // catch errors
 app.use((error, res, next) => {
     res.status(error.status || 500);
-    res.statusMessage = "Erro Interno no Servidor";
+    res.statusMessage = 'Erro Interno no Servidor';
     error.statusCode = res.statusCode;
     error.statusMessage = res.statusMessage;
 	res.json({
