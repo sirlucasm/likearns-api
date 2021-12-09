@@ -32,4 +32,6 @@ routes
         res.send('Welcome to Likearns API');
     });
 
+app.use(routes);
+
 module.exports = app;
