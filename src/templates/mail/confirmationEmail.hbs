@@ -31,9 +31,6 @@
 		}
 
 		.text {
-			position: relative;
-			left: 25%;
-			right: 25%;
 			margin-bottom: 40px;
 		}
 
@@ -57,20 +54,33 @@
 	<div class="container">
 		<div class="card">
 			<div class="header-bg"></div>
-			<div class="content">
-				<h3 class="content-title" style="color: #202020;">
-					Confirmação de Email
-				</h3>
-				<div class="text">
-					<p class="content-text" style="color: #202020;">
-						Hey, <strong>{{name}}</strong>! Você está quase lá para usar o Likearns,
-						você só precisa ativar sua conta e para isso, basta clicar no botão abaixo e voltar para o nosso
-						site.
-					</p>
-				</div>
-				<a href="{{verifyUrl}}" style="color: #f3f3f3;" class="btn">Verificar
-					conta</a>
-			</div>
+			<table class="content" border="0" cellpadding="0" cellspacing="0" width="100%" id="bodyTable">
+				<tr>
+					<td align="center" valign="top">
+						<h3 class="content-title" style="color: #202020;">
+							Confirmação de Email
+						</h3>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" valign="top">
+						<div class="text">
+							<p class="content-text" style="color: #202020;">
+								Hey, <strong>{{name}}</strong>! Você está quase lá para usar o Likearns,
+								você só precisa ativar sua conta e para isso, basta clicar no botão abaixo e voltar para
+								o nosso
+								site.
+							</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="{{verifyUrl}}" style="color: #f3f3f3;" class="btn">Verificar
+							conta</a>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </body>
