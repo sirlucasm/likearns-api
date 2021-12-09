@@ -2,7 +2,6 @@ const MailerService = require('../services/MailerService');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const knex = require('../config/knex');
-const confirmationEmail = require('../templates/mail/confirmationEmail');
 const path = require('path');
 
 module.exports = {
