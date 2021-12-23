@@ -19,6 +19,7 @@ routes
 	.get('/alerts', AlertsController.all)
 	.post('/alerts', onlyModerators, AlertsController.create)
 	.patch('/alerts/:id', onlyModerators, AlertsController.update)
-	.delete('/alerts/:id', onlyModerators, AlertsController.delete);
+	.delete('/alerts/:id', onlyModerators, AlertsController.delete)
+	.get('/social-medias', onlyModerators, ModeratorController.listSocialMedias);
 
 module.exports = routes;

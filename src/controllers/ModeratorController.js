@@ -154,5 +154,15 @@ module.exports = {
         } catch (error) {
             next(error);
         }
+    },
+
+	async listSocialMedias(req, res, next) {
+        try {		
+			const socialMedias = await knex('moderators_social_medias');
+
+			return res.status(200).json(socialMedias);
+        } catch (error) {
+            next(error);
+        }
     }
 };
