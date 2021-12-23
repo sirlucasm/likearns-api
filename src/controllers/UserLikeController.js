@@ -12,13 +12,14 @@ module.exports = {
 			const { id } = req.token;
             if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
 			const users_likes = await knex('users_likes')
-                .select('users_likes.day_name', 'gain_likes.obtained_likes as obtained_values', 'gain_likes.social_media')
+                .select('users_likes.day_name', 'gain_likes.social_media')
+				.sum('gain_likes.obtained_likes as obtained_values')
                 .join('gain_likes', 'users_likes.gain_like_id', 'gain_likes.id')
                 .where('gain_likes.social_media', social_media).andWhere('users_likes.user_id', id)
                 .groupBy('users_likes.day_name');
             if (users_likes.length <= 0) return res.json([{
                 day_name: 'Nenhum dado capturado',
-                obtained_likes: 0
+                obtained_values: 0
             }]);
 			return res.json(users_likes);
 		} catch (error) {
