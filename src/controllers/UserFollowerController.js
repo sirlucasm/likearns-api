@@ -1,27 +1,40 @@
 const knex = require('../config/knex');
 const {
     createPagination,
+	days
 } = require('../utils');
 
 module.exports = {
 	async index(req, res, next) {
 		try {
-            const page = parseInt(req.query.page);
-            const limit = parseInt(req.query.limit);
             const social_media = req.query.social_media;
 			const { id } = req.token;
-            if (!page || !limit) return next(new Error('Nenhuma pagina/limite definido'));
 			const users_followers = await knex('users_followers')
                 .select('users_followers.day_name', 'gain_followers.social_media')
 				.sum('gain_followers.obtained_followers as obtained_values')
                 .join('gain_followers', 'users_followers.gain_follower_id', 'gain_followers.id')
                 .where('gain_followers.social_media', social_media).andWhere('users_followers.user_id', id)
                 .groupBy('users_followers.day_name');
-            if (users_followers.length <= 0) return res.json([{
-                day_name: 'Nenhum dado capturado',
-                obtained_values: 0
-            }]);
-			return res.json(users_followers);
+
+			const newUserFollowerArray = Array(7).fill('').map((_, i) => ({
+				day_name: days()[i],
+				social_media: parseInt(social_media),
+				obtained_values: 0,
+				day_code: i,
+			}));
+
+			users_followers.map(uf => {
+				const indexOfDay = days().indexOf(uf.day_name);
+				uf.day_code = indexOfDay;
+
+				if (users_followers.length <= days().length) {
+					if (indexOfDay == uf.day_code) {
+						newUserFollowerArray[indexOfDay] = uf;
+					}
+				}
+			});
+
+			return res.json(newUserFollowerArray);
 		} catch (error) {
 			next(error);
 		} return null;

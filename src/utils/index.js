@@ -14,7 +14,7 @@ module.exports = {
             };
         }
         pagination.total = allItems;
-        return pagination
+        return pagination;
     },
 
     calculatePointsToEarn(lostPoints) {
@@ -24,8 +24,11 @@ module.exports = {
     },
 
     getDayName() {
-        var days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
         var d = new Date(Date.now());
-        return days[d.getDay()];
-    }
+        return this.days()[d.getDay()];
+    },
+
+	days() {
+		return ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'];
+	}
 };
