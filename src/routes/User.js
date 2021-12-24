@@ -27,6 +27,7 @@ routes
 	.get('/is-verified-email', authentication, UserController.isVerifiedEmail)
 	.post('/claim-reward', authentication, rewardToken, UserController.claimReward)
 	.post('/reset-reward', authentication, rewardToken, UserController.resetReward)
-	.post('/import-profile-picture', authentication, UserController.importProfilePicture);
+	.post('/import-profile-picture', authentication, UserController.importProfilePicture)
+	.get('/my-gains', authentication, UserController.getMyGains);
 
 module.exports = routes;

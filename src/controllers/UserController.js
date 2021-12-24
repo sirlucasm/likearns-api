@@ -375,4 +375,16 @@ module.exports = {
 			next(error);
 		}
 	},
+
+	async getMyGains(req, res, next) {
+		try {
+			const { id } = req.token;
+			const likes = await knex('gain_likes').where({ user_id: id });
+			const followers = await knex('gain_followers').where({ user_id: id });
+
+			return res.status(200).json([...likes, ...followers]);
+		} catch (error) {
+			next(error);
+		}
+	},
 };
