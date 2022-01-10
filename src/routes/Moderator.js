@@ -4,6 +4,7 @@ const routes = express.Router();
 
 // middlewares
 const onlyModerators = require('../middleware/OnlyModerators');
+const authentication = require('../middleware/Authentication');
 
 const ModeratorController = require('../controllers/ModeratorController');
 const AlertsController = require('../controllers/AlertsController');
@@ -20,6 +21,6 @@ routes
 	.post('/alerts', onlyModerators, AlertsController.create)
 	.patch('/alerts/:id', onlyModerators, AlertsController.update)
 	.delete('/alerts/:id', onlyModerators, AlertsController.delete)
-	.get('/social-medias', onlyModerators, ModeratorController.listSocialMedias);
+	.get('/social-medias', authentication, ModeratorController.listSocialMedias);
 
 module.exports = routes;
