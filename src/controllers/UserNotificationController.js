@@ -12,8 +12,18 @@ module.exports = {
 			const notifications = await knex('users_notifications')
 				.select(
 					'users_notifications.id', 'users_notifications.type', 'users_notifications.social_media', 'users_notifications.readed', 'users_notifications.created_at',
-					knex.raw('json_object(\'username\', users.username , \'social_profile_picture\', users.social_profile_picture) as user'),
-					knex.raw('(select json_object(\'username\', users.username , \'social_profile_picture\', users.social_profile_picture) from users where users.id = '+ id +') as to_me')
+					knex.raw(`json_object(
+						'id', users.id,
+						'username', users.username,
+						'email', users.email,
+						'social_profile_picture', users.social_profile_picture
+					) as user`),
+					knex.raw(`(select json_object(
+						'id', users.id,
+						'username', users.username,
+						'email', users.email,
+						'social_profile_picture', users.social_profile_picture
+					) from users where users.id = ${id}) as to_me`)
 				)
 				.join('users', 'users_notifications.user_id', 'users.id')
 				.where({ 'users_notifications.to_user_id': id, readed: false })
@@ -60,8 +70,18 @@ module.exports = {
 			const activities = await knex('users_notifications')
 				.select(
 					'users_notifications.id', 'users_notifications.type', 'users_notifications.social_media', 'users_notifications.readed', 'users_notifications.created_at',
-					knex.raw('json_object(\'username\', users.username , \'social_profile_picture\', users.social_profile_picture) as to_me'),
-					knex.raw('(select json_object(\'username\', users.username , \'social_profile_picture\', users.social_profile_picture) from users where users.id = '+ id +') as user')
+					knex.raw(`json_object(
+						'id', users.id,
+						'username', users.username,
+						'email', users.email,
+						'social_profile_picture', users.social_profile_picture
+					) as to_me`),
+					knex.raw(`(select json_object(
+						'id', users.id,
+						'username', users.username,
+						'email', users.email,
+						'social_profile_picture', users.social_profile_picture
+					) from users where users.id = ${id}) as user`)
 				)
 				.join('users', 'users_notifications.to_user_id', 'users.id')
 				.where({ 'users_notifications.user_id': id });
