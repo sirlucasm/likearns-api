@@ -5,6 +5,7 @@ const {
 	calculatePointsToEarn,
 	getDayName
 } = require('../utils');
+const AddressController = require('./AddressController');
 const InstagramController = require('./social_media/InstagramController');
 const TwitterController = require('./social_media/TwitterController');
 const UserNotificationController = require('./UserNotificationController');
@@ -45,9 +46,11 @@ module.exports = {
             if (user.length > 0) return res.status(400).json({ message: 'Esta conta já existe' });
             const encryptedPassword = await bcrypt.hash(params.password, 10); // encrypt password
             params.password = encryptedPassword;
-            const newUserId = await knex('users').insert(params); // database insert
+            const newUser = await knex('users').insert(params); // database insert
+			var userId = newUser[0];
+			await AddressController.create(userId); // create when user is created
             const token = jwt.sign({
-                id: newUserId[0],
+                id: userId,
                 ...params
 			}, process.env.JWT_PRIVATE_KEY,
 			{

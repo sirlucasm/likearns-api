@@ -14,6 +14,7 @@ const UserFollowerRoute = require('./UserFollower');
 const UserLikeRoute = require('./UserLike');
 const UserNotificationRoute = require('./UserNotification');
 const UserWithdrawRoute = require('./UserWithdraw');
+const Address = require('./Address');
 
 app.use('/gain/followers', GainFollowerRoute);
 app.use('/gain/likes', GainLikeRoute);
@@ -26,6 +27,7 @@ app.use('/users-followers', UserFollowerRoute);
 app.use('/users-likes', UserLikeRoute);
 app.use('/users-notifications', UserNotificationRoute);
 app.use('/users-withdraws', UserWithdrawRoute);
+app.use('/addresses', Address);
 
 routes
     .get('/', (req, res, next) => {
