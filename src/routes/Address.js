@@ -10,6 +10,6 @@ const AddressController = require('../controllers/AddressController');
 // USERS LIKES
 routes
 	.get('/:id', authentication, AddressController.find)
-	.put('/:id', authentication, AddressController.update);
+	.put('/', authentication, AddressController.update);
 
 module.exports = routes;

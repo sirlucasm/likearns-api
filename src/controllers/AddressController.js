@@ -21,8 +21,7 @@ module.exports = {
     async update (req, res, next) {
 		try {
 			const params = req.body;
-			const { id } = req.params;
-			await knex('addresses').update(params).where({ id });
+			await knex('addresses').update(params).where({ id: params.id });
 			return res.status(200).send();
 		} catch (error) {
 			next(error);
